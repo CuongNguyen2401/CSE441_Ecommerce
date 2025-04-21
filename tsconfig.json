@@ -1,6 +1,16 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
-  }
+    "baseUrl": "src",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@screens/*": ["screens/*"]
+    },
+    // "noEmit": true,
+    // "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*", "tamagui.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }
