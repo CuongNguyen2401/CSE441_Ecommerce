@@ -1,19 +1,11 @@
-import React, {useEffect} from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {TamaguiProvider} from 'tamagui';
-import Constants from 'expo-constants';
-// Import Tamagui config
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
+import { StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { TamaguiProvider } from 'tamagui';
 import tamaguiConfig from './tamagui.config';
-
-// Import navigation
 import AppNavigator from './src/navigation/AppNavigator.tsx';
 
-// Import stores
-import {useAuthStore} from './src/store/authStore';
-
-// Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -24,15 +16,9 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
-    const apiUrl = Constants.expoConfig?.extra?.apiUrl;
-    console.log('API_URL:', apiUrl);
-  const isDarkMode = useColorScheme() === 'dark';
-  const checkAuth = useAuthStore(state => state.checkAuth);
 
-  // Check auth-service status when app loads
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const isDarkMode = useColorScheme() === 'dark';
+
 
   return (
     <TamaguiProvider config={tamaguiConfig}>

@@ -1,20 +1,18 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
-    YStack,
-    XStack,
-    Text,
     Button,
-    Input,
     Form,
+    Image,
+    Input,
     ScrollView,
-    Image
+    Text,
+    XStack,
+    YStack
 } from 'tamagui';
-import {useAuthStore} from "../../../store/authStore";
 
 const ForgotPasswordScreen = () => {
     const navigation = useNavigation();
-    const resetPassword = useAuthStore(state => state.resetPassword);
 
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -30,14 +28,7 @@ const ForgotPasswordScreen = () => {
         setIsLoading(true);
         setError('');
 
-        try {
-            await resetPassword(email);
-            setSuccess(true);
-        } catch (err) {
-            setError('Failed to send reset email. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
+     
     };
 
     return (

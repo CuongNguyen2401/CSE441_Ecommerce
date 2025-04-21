@@ -1,22 +1,18 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {
-	YStack,
-	XStack,
-	Text,
-	Button,
-	ScrollView,
-	Image,
-	Card,
-	H4,
-	Input,
-	Select,
-	Adapt,
-	Sheet,
-	Separator,
-	View
-} from 'tamagui';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {
+	
+	Card,
+	Image,
+	Input,
+	ScrollView,
+	Select,
+	Separator,
+	Text,
+	XStack,
+	YStack
+} from 'tamagui';
 
 // Mock data for demonstration
 const products = [
@@ -133,7 +129,7 @@ const ProductsScreen = () => {
 							<Select.Value placeholder="Select category"/>
 						</Select.Trigger>
 
-						<Adapt when="sm" platform="touch">
+						{/* <Adapt when="sm" platform="touch">
 							<Sheet modal dismissOnSnapToBottom>
 								<Sheet.Frame>
 									<Sheet.ScrollView>
@@ -142,7 +138,7 @@ const ProductsScreen = () => {
 								</Sheet.Frame>
 								<Sheet.Overlay/>
 							</Sheet>
-						</Adapt>
+						</Adapt> */}
 
 						<Select.Content>
 							<Select.ScrollUpButton/>
@@ -168,7 +164,7 @@ const ProductsScreen = () => {
 							<Select.Value placeholder="Sort by"/>
 						</Select.Trigger>
 
-						<Adapt when="sm" platform="touch">
+						{/* <Adapt when="sm" platform="touch">
 							<Sheet modal dismissOnSnapToBottom>
 								<Sheet.Frame>
 									<Sheet.ScrollView>
@@ -177,7 +173,7 @@ const ProductsScreen = () => {
 								</Sheet.Frame>
 								<Sheet.Overlay/>
 							</Sheet>
-						</Adapt>
+						</Adapt> */}
 
 						<Select.Content>
 							<Select.ScrollUpButton/>

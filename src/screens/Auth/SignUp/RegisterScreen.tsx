@@ -11,11 +11,9 @@ import {
 	XStack,
 	YStack
 } from 'tamagui';
-import { useAuthStore } from '../../../store/authStore';
 
 const RegisterScreen = () => {
 	const navigation = useNavigation();
-	const register = useAuthStore(state => state.register);
 
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
@@ -44,14 +42,7 @@ const RegisterScreen = () => {
 		setIsLoading(true);
 		setError('');
 
-		try {
-			await register(name, email, password);
-			// Navigation will be handled by the auth state change in AppNavigator
-		} catch (err) {
-			setError('Registration failed. Please try again.');
-		} finally {
-			setIsLoading(false);
-		}
+
 	};
 
 	return (

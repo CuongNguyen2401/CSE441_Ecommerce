@@ -14,7 +14,6 @@ import {
 	View
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useAuthStore} from "../../store/authStore";
 
 // Mock user data for demonstration
 const userData = {
@@ -50,7 +49,6 @@ const userData = {
 
 const ProfileScreen = () => {
 	const navigation = useNavigation();
-	const logout = useAuthStore((state: { logout: any; }) => state.logout);
 
 	const handleEditProfile = () => {
 		//navigation.navigate('EditProfile');
@@ -69,7 +67,7 @@ const ProfileScreen = () => {
 	};
 
 	const handleLogout = () => {
-		logout();
+		
 		// Navigation will be handled by the auth state change in AppNavigator
 	};
 

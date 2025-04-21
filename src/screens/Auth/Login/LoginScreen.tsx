@@ -1,21 +1,18 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
-    YStack,
-    XStack,
-    Text,
     Button,
-    Input,
     Form,
-    Separator,
     Image,
-    ScrollView
+    Input,
+    ScrollView,
+    Text,
+    XStack,
+    YStack
 } from 'tamagui';
-import {useAuthStore} from '../../../store/authStore';
 
 const LoginScreen = () => {
     const navigation = useNavigation();
-    const login = useAuthStore(state => state.login);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -31,13 +28,7 @@ const LoginScreen = () => {
         setIsLoading(true);
         setError('');
 
-        try {
-            await login(email, password);
-        } catch (err) {
-            setError('Invalid email or password');
-        } finally {
-            setIsLoading(false);
-        }
+    
     };
 
 	return (
