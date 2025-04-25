@@ -46,12 +46,12 @@ const AddAddressScreen = () => {
 
 	return (
 		<ScrollView flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				<H4>Add New Address</H4>
 
 				<Form onSubmit={handleSave}>
-					<YStack space="$4">
-						<YStack space="$1">
+					<YStack gap="$4">
+						<YStack gap="$1">
 							<Label htmlFor="name" fontSize="$3">Full Name</Label>
 							<Input
 								id="name"
@@ -62,7 +62,7 @@ const AddAddressScreen = () => {
 							/>
 						</YStack>
 
-						<YStack space="$1">
+						<YStack gap="$1">
 							<Label htmlFor="street" fontSize="$3">Street Address</Label>
 							<Input
 								id="street"
@@ -73,7 +73,7 @@ const AddAddressScreen = () => {
 							/>
 						</YStack>
 
-						<YStack space="$1">
+						<YStack gap="$1">
 							<Label htmlFor="city" fontSize="$3">City</Label>
 							<Input
 								id="city"
@@ -84,8 +84,8 @@ const AddAddressScreen = () => {
 							/>
 						</YStack>
 
-						<XStack space="$2">
-							<YStack space="$1" flex={1}>
+						<XStack gap="$2">
+							<YStack gap="$1" flex={1}>
 								<Label htmlFor="state" fontSize="$3">State/Province</Label>
 								<Input
 									id="state"
@@ -96,7 +96,7 @@ const AddAddressScreen = () => {
 								/>
 							</YStack>
 
-							<YStack space="$1" flex={1}>
+							<YStack gap="$1" flex={1}>
 								<Label htmlFor="zip" fontSize="$3">ZIP/Postal Code</Label>
 								<Input
 									id="zip"
@@ -109,7 +109,7 @@ const AddAddressScreen = () => {
 							</YStack>
 						</XStack>
 
-						<YStack space="$1">
+						<YStack gap="$1">
 							<Label htmlFor="country" fontSize="$3">Country</Label>
 							<Input
 								id="country"
@@ -120,7 +120,7 @@ const AddAddressScreen = () => {
 							/>
 						</YStack>
 
-						<YStack space="$1">
+						<YStack gap="$1">
 							<Label htmlFor="phone" fontSize="$3">Phone Number</Label>
 							<Input
 								id="phone"
@@ -132,7 +132,7 @@ const AddAddressScreen = () => {
 							/>
 						</YStack>
 
-						<XStack space="$2" alignItems="center">
+						<XStack gap="$2" alignItems="center">
 							<Checkbox
 								id="isDefault"
 								checked={isDefault}
@@ -153,7 +153,7 @@ const AddAddressScreen = () => {
 							</Text>
 						) : null}
 
-						<XStack space="$3" marginTop="$2">
+						<XStack gap="$3" marginTop="$2">
 							<Button
 								flex={1}
 								size="$4"
@@ -172,7 +172,7 @@ const AddAddressScreen = () => {
 								disabled={isLoading}
 							>
 								{isLoading ? (
-									<XStack space="$2" alignItems="center">
+									<XStack gap="$2" alignItems="center">
 										<Spinner size="small" color="white"/>
 										<Text color="white">Saving...</Text>
 									</XStack>

@@ -15,7 +15,7 @@ import {
 	YStack
 } from 'tamagui';
 import { Category, Product } from "../products/helpers";
-import { HomeStackParamList } from '../../navigation/types';
+import { HomeStackParamList, NavigationRoutes } from '../../navigation/types';
 
 const categories = [
 	{id: 1, name: 'Electronics', icon: 'devices'},
@@ -106,19 +106,19 @@ const HomeScreen = () => {
 	};
 
 	const handleProductPress = (product: Product) => {
-		navigation.navigate('ProductDetails', {productId: product.id});
+		navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {productId: product.id});
 	};
 
 	return (
 		<ScrollView flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				{/* Search Bar */}
 				<XStack
 					backgroundColor="$backgroundHover"
 					borderRadius="$4"
 					padding="$2"
 					alignItems="center"
-					space="$2"
+					gap="$2"
 				>
 					<Icon name="search" size={24} color="#999"/>
 					<Input
@@ -134,7 +134,7 @@ const HomeScreen = () => {
 				<YStack>
 					<H4 marginBottom="$2">Special Offers</H4>
 					<ScrollView horizontal showsHorizontalScrollIndicator={false}>
-						<XStack space="$3" paddingVertical="$2">
+						<XStack gap="$3" paddingVertical="$2">
 							{promotions.map(promo => (
 								<Card
 									key={promo.id}
@@ -152,7 +152,7 @@ const HomeScreen = () => {
 											source={{uri: promo.image}}
 											width="100%"
 											height="100%"
-											resizeMode="cover"
+											objectFit="cover"
 										/>
 									</Card.Background>
 									<Card.Footer padded>
@@ -175,12 +175,12 @@ const HomeScreen = () => {
 				<YStack>
 					<H4 marginBottom="$2">Shop by Category</H4>
 					<ScrollView horizontal showsHorizontalScrollIndicator={false}>
-						<XStack space="$3" paddingVertical="$2">
+						<XStack gap="$3" paddingVertical="$2">
 							{categories.map(category => (
 								<YStack
 									key={category.id}
 									alignItems="center"
-									space="$1"
+									gap="$1"
 									onPress={() => handleCategoryPress(category)}
 								>
 									<XStack
@@ -229,9 +229,9 @@ const HomeScreen = () => {
 									source={{uri: product.images[0]}}
 									width="100%"
 									height={150}
-									resizeMode="cover"
+									objectFit="cover"
 								/>
-								<YStack padding="$2" space="$1">
+								<YStack padding="$2" gap="$1">
 									<Text fontSize="$3" numberOfLines={1} fontWeight="bold">
 										{product.name}
 									</Text>

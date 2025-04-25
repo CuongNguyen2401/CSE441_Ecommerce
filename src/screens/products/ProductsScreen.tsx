@@ -1,14 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
+import { NavigationRoutes } from 'navigation/types';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
 	
+	Adapt,
 	Card,
 	Image,
 	Input,
 	ScrollView,
 	Select,
 	Separator,
+	Sheet,
 	Text,
 	XStack,
 	YStack
@@ -93,19 +96,19 @@ const ProductsScreen = () => {
 		image?: string;
 		category?: string;
 	}) => {
-		navigation.navigate('ProductDetails', {productId: product.id});
+		navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {productId: product.id});
 	};
 
 	return (
 		<YStack flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				{/* Search Bar */}
 				<XStack
 					backgroundColor="$backgroundHover"
 					borderRadius="$4"
 					padding="$2"
 					alignItems="center"
-					space="$2"
+					gap="$2"
 				>
 					<Icon name="search" size={24} color="#999"/>
 					<Input
@@ -129,7 +132,7 @@ const ProductsScreen = () => {
 							<Select.Value placeholder="Select category"/>
 						</Select.Trigger>
 
-						{/* <Adapt when="sm" platform="touch">
+						 <Adapt when="sm" platform="touch">
 							<Sheet modal dismissOnSnapToBottom>
 								<Sheet.Frame>
 									<Sheet.ScrollView>
@@ -138,7 +141,7 @@ const ProductsScreen = () => {
 								</Sheet.Frame>
 								<Sheet.Overlay/>
 							</Sheet>
-						</Adapt> */}
+						</Adapt> 
 
 						<Select.Content>
 							<Select.ScrollUpButton/>
@@ -164,7 +167,7 @@ const ProductsScreen = () => {
 							<Select.Value placeholder="Sort by"/>
 						</Select.Trigger>
 
-						{/* <Adapt when="sm" platform="touch">
+						<Adapt when="sm" platform="touch">
 							<Sheet modal dismissOnSnapToBottom>
 								<Sheet.Frame>
 									<Sheet.ScrollView>
@@ -173,7 +176,7 @@ const ProductsScreen = () => {
 								</Sheet.Frame>
 								<Sheet.Overlay/>
 							</Sheet>
-						</Adapt> */}
+						</Adapt>
 
 						<Select.Content>
 							<Select.ScrollUpButton/>
@@ -209,9 +212,9 @@ const ProductsScreen = () => {
 									source={{uri: product.image}}
 									width="100%"
 									height={150}
-									resizeMode="cover"
+									objectFit="cover"
 								/>
-								<YStack padding="$2" space="$1">
+								<YStack padding="$2" gap="$1">
 									<Text fontSize="$3" numberOfLines={1} fontWeight="bold">
 										{product.name}
 									</Text>

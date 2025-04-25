@@ -82,10 +82,10 @@ const ProfileScreen = () => {
 
 	return (
 		<ScrollView flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				{/* Profile Header */}
 				<Card bordered padding="$4">
-					<YStack space="$4" alignItems="center">
+					<YStack gap="$4" alignItems="center">
 						<Avatar circular size="$10">
 							<Avatar.Image src={userData.avatar}/>
 							<Avatar.Fallback backgroundColor="$blue10">
@@ -111,7 +111,7 @@ const ProfileScreen = () => {
 				</Card>
 
 				{/* Quick Actions */}
-				<YStack space="$3">
+				<YStack gap="$3">
 					<H4>Account</H4>
 
 					<Card bordered>
@@ -122,7 +122,7 @@ const ProfileScreen = () => {
 								backgroundColor="transparent"
 								//onPress={() => navigation.navigate('OrdersTab')}
 							>
-								<XStack space="$3" flex={1} alignItems="center">
+								<XStack gap="$3" flex={1} alignItems="center">
 									<Icon name="receipt" size={24} color="#666"/>
 									<Text fontSize="$3">My Orders</Text>
 									<View flex={1}/>
@@ -138,7 +138,7 @@ const ProfileScreen = () => {
 								backgroundColor="transparent"
 								onPress={handleAddresses}
 							>
-								<XStack space="$3" flex={1} alignItems="center">
+								<XStack gap="$3" flex={1} alignItems="center">
 									<Icon name="location-on" size={24} color="#666"/>
 									<Text fontSize="$3">My Addresses</Text>
 									<View flex={1}/>
@@ -154,7 +154,7 @@ const ProfileScreen = () => {
 								backgroundColor="transparent"
 								//onPress={() => navigation.navigate('CartTab')}
 							>
-								<XStack space="$3" flex={1} alignItems="center">
+								<XStack gap="$3" flex={1} alignItems="center">
 									<Icon name="shopping-cart" size={24} color="#666"/>
 									<Text fontSize="$3">My Cart</Text>
 									<View flex={1}/>
@@ -167,7 +167,7 @@ const ProfileScreen = () => {
 
 				{/* Default Address */}
 				{userData.addresses.length > 0 && (
-					<YStack space="$3">
+					<YStack gap="$3">
 						<XStack justifyContent="space-between" alignItems="center">
 							<H4>Default Address</H4>
 							<Button size="$2" onPress={handleAddresses}>
@@ -176,7 +176,7 @@ const ProfileScreen = () => {
 						</XStack>
 
 						<Card bordered padding="$3">
-							<YStack space="$1">
+							<YStack gap="$1">
 								<Text fontSize="$3" fontWeight="bold">{userData.addresses[0].name}</Text>
 								<Text fontSize="$2">{userData.addresses[0].street}</Text>
 								<Text fontSize="$2">
@@ -191,11 +191,11 @@ const ProfileScreen = () => {
 
 				{/* Payment Methods */}
 				{userData.paymentMethods.length > 0 && (
-					<YStack space="$3">
+					<YStack gap="$3">
 						<H4>Payment Methods</H4>
 
 						<Card bordered padding="$3">
-							<XStack space="$3" alignItems="center">
+							<XStack gap="$3" alignItems="center">
 								<Icon name="credit-card" size={24} color="#666"/>
 								<YStack>
 									<Text fontSize="$3" fontWeight="bold">
@@ -212,7 +212,7 @@ const ProfileScreen = () => {
 				)}
 
 				{/* Settings */}
-				<YStack space="$3">
+				<YStack gap="$3">
 					<H4>Settings</H4>
 
 					<Card bordered>
@@ -223,7 +223,7 @@ const ProfileScreen = () => {
 								backgroundColor="transparent"
 								onPress={handleSettings}
 							>
-								<XStack space="$3" flex={1} alignItems="center">
+								<XStack gap="$3" flex={1} alignItems="center">
 									<Icon name="settings" size={24} color="#666"/>
 									<Text fontSize="$3">App Settings</Text>
 									<View flex={1}/>
@@ -239,7 +239,7 @@ const ProfileScreen = () => {
 								backgroundColor="transparent"
 								onPress={handleAbout}
 							>
-								<XStack space="$3" flex={1} alignItems="center">
+								<XStack gap="$3" flex={1} alignItems="center">
 									<Icon name="info" size={24} color="#666"/>
 									<Text fontSize="$3">About</Text>
 									<View flex={1}/>

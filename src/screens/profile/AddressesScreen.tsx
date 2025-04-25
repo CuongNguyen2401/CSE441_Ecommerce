@@ -14,7 +14,7 @@ import {
 	Paragraph,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {ProfileStackParamList} from '../../navigation/types';
+import {NavigationRoutes, ProfileStackParamList} from '../../navigation/types';
 
 // Mock data for demonstration
 const addresses = [
@@ -49,11 +49,11 @@ const AddressesScreen: React.FC = () => {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
 	const handleAddAddress = () => {
-		navigation.navigate('AddAddress');
+		navigation.navigate(NavigationRoutes.ADD_ADDRESS);
 	};
 
 	const handleEditAddress = (addressId: number) => {
-		navigation.navigate('EditAddress', {addressId: addressId});
+		navigation.navigate(NavigationRoutes.EDIT_ADDRESS, {addressId: addressId});
 	};
 
 	const handleDeleteAddress = (addressId: number) => {
@@ -79,7 +79,7 @@ const AddressesScreen: React.FC = () => {
 	return (
 		<YStack flex={1} backgroundColor="$background">
 			<ScrollView flex={1}>
-				<YStack padding="$4" space="$4">
+				<YStack padding="$4" gap="$4">
 					<XStack justifyContent="space-between" alignItems="center">
 						<H4>My Addresses</H4>
 						<Button size="$3" onPress={handleAddAddress}>
@@ -104,10 +104,10 @@ const AddressesScreen: React.FC = () => {
 							</Button>
 						</YStack>
 					) : (
-						<YStack space="$3">
+						<YStack gap="$3">
 							{userAddresses.map(address => (
 								<Card key={address.id} bordered padding="$3">
-									<YStack space="$3">
+									<YStack gap="$3">
 										<XStack justifyContent="space-between" alignItems="center">
 											<Text fontSize="$3" fontWeight="bold">{address.name}</Text>
 											{address.isDefault && (
@@ -117,7 +117,7 @@ const AddressesScreen: React.FC = () => {
 											)}
 										</XStack>
 
-										<YStack space="$1">
+										<YStack gap="$1">
 											<Text fontSize="$3">{address.street}</Text>
 											<Text fontSize="$3">
 												{`${address.city}, ${address.state} ${address.zip}`}
@@ -189,13 +189,13 @@ const AddressesScreen: React.FC = () => {
 						opacity={1}
 						y={0}
 					>
-						<YStack space>
+						<YStack gap="$4" padding="$4">
 							<AlertDialog.Title>Delete Address</AlertDialog.Title>
 							<AlertDialog.Description>
 								Are you sure you want to delete this address? This action cannot be undone.
 							</AlertDialog.Description>
 
-							<XStack space="$3" justifyContent="flex-end">
+							<XStack gap="$3" justifyContent="flex-end">
 								<AlertDialog.Cancel asChild>
 									<Button>Cancel</Button>
 								</AlertDialog.Cancel>

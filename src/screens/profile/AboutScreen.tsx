@@ -34,9 +34,9 @@ const AboutScreen = () => {
 
 	return (
 		<ScrollView flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				{/* App Info */}
-				<YStack alignItems="center" space="$4" marginVertical="$4">
+				<YStack alignItems="center" gap="$4" marginVertical="$4">
 					<Image
 						source={{uri: 'https://placekitten.com/200/200'}}
 						width={100}
@@ -53,7 +53,7 @@ const AboutScreen = () => {
 
 				{/* App Description */}
 				<Card bordered padding="$4">
-					<YStack space="$3">
+					<YStack gap="$3">
 						<H4>About the App</H4>
 						<Paragraph>
 							Our e-commerce app provides a seamless shopping experience with a wide range of products.
@@ -69,10 +69,10 @@ const AboutScreen = () => {
 
 				{/* Features */}
 				<Card bordered padding="$4">
-					<YStack space="$3">
+					<YStack gap="$3">
 						<H4>Key Features</H4>
 
-						<XStack space="$3" alignItems="center">
+						<XStack gap="$3" alignItems="center">
 							<Icon name="search" size={24} color="#3B82F6"/>
 							<YStack>
 								<Text fontSize="$3" fontWeight="bold">Smart Search</Text>
@@ -81,7 +81,7 @@ const AboutScreen = () => {
 							</YStack>
 						</XStack>
 
-						<XStack space="$3" alignItems="center">
+						<XStack gap="$3" alignItems="center">
 							<Icon name="local-shipping" size={24} color="#3B82F6"/>
 							<YStack>
 								<Text fontSize="$3" fontWeight="bold">Fast Delivery</Text>
@@ -89,7 +89,7 @@ const AboutScreen = () => {
 							</YStack>
 						</XStack>
 
-						<XStack space="$3" alignItems="center">
+						<XStack gap="$3" alignItems="center">
 							<Icon name="security" size={24} color="#3B82F6"/>
 							<YStack>
 								<Text fontSize="$3" fontWeight="bold">Secure Payments</Text>
@@ -97,7 +97,7 @@ const AboutScreen = () => {
 							</YStack>
 						</XStack>
 
-						<XStack space="$3" alignItems="center">
+						<XStack gap="$3" alignItems="center">
 							<Icon name="support-agent" size={24} color="#3B82F6"/>
 							<YStack>
 								<Text fontSize="$3" fontWeight="bold">24/7 Support</Text>
@@ -109,12 +109,12 @@ const AboutScreen = () => {
 
 				{/* Meet the Team */}
 				<Card bordered padding="$4">
-					<YStack space="$3">
+					<YStack gap="$3">
 						<H4>Meet the Team</H4>
 
-						<YStack space="$3">
+						<YStack gap="$3">
 							{teamMembers.map(member => (
-								<XStack key={member.id} space="$3" alignItems="center">
+								<XStack key={member.id} gap="$3" alignItems="center">
 									<Avatar circular size="$4">
 										<Avatar.Image src={member.avatar}/>
 										<Avatar.Fallback backgroundColor="$blue10">
@@ -135,7 +135,7 @@ const AboutScreen = () => {
 
 				{/* Contact & Legal */}
 				<Card bordered padding="$4">
-					<YStack space="$3">
+					<YStack gap="$3">
 						<H4>Contact & Legal</H4>
 
 						<Button
@@ -169,7 +169,7 @@ const AboutScreen = () => {
 
 				{/* Social Media */}
 				<Card bordered padding="$4">
-					<YStack space="$3">
+					<YStack gap="$3">
 						<H4>Follow Us</H4>
 
 						<XStack justifyContent="space-around">

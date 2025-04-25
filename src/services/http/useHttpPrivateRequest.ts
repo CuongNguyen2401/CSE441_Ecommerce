@@ -1,4 +1,4 @@
-import { useRefreshToken } from '@/queries/Auth/useRefreshToken';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosInstance } from 'axios';
 
 export const useHttpPrivateRequest = (baseURL: string): AxiosInstance => {
@@ -15,34 +15,44 @@ export const useHttpPrivateRequest = (baseURL: string): AxiosInstance => {
 
   // Request interceptor to add Authorization header
   apiInstance.interceptors.request.use(
-    (config) => {
-      const accessToken = localStorage.getItem('accessToken');
+    async config => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
       if (accessToken) {
         config.headers['Authorization'] = `Bearer ${accessToken}`;
       }
       return config;
     },
-    (error) => Promise.reject(error),
+    // eslint-disable-next-line promise/no-promise-in-callback
+    error => Promise.reject(error),
   );
 
   // Response interceptor to handle 401 errors and refresh token
   apiInstance.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const { response } = error;
+    response => response,
+    async error => {
+      const {response} = error;
       const originalRequest = error.config;
       if (response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useRefreshToken({
-          onSuccess: (data) => {
-            localStorage.setItem('accessToken', data.result.accessToken);
-            localStorage.setItem('refreshToken', data.result.refreshToken);
-          },
-        });
-        const token = localStorage.getItem('token');
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-        return apiInstance(originalRequest);
+
+        const refreshToken = await AsyncStorage.getItem('refreshToken');
+
+        if (refreshToken) {
+          // Example of how you might use your refresh token API
+          const {data} = await axios.post(`${baseURL}/refresh-token`, {
+            refreshToken,
+          });
+          const newAccessToken = data.result.accessToken;
+
+          // Store new tokens in AsyncStorage
+          await AsyncStorage.setItem('accessToken', newAccessToken);
+          await AsyncStorage.setItem('refreshToken', data.result.refreshToken);
+
+          // Set Authorization header with new access token
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
+          return apiInstance(originalRequest);
+        }
       }
 
       return Promise.reject(error);

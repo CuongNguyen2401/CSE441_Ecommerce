@@ -14,6 +14,7 @@ import {
   View
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationRoutes } from 'navigation/types';
 
 // Mock data for demonstration
 const orders = [
@@ -75,11 +76,14 @@ const OrdersScreen = () => {
 
   const filteredOrders = getFilteredOrders();
 
-  const handleViewOrder = (orderId) => {
-    navigation.navigate('OrderDetails', { orderId });
+  const handleViewOrder = (orderId: number) => {
+    navigation.navigate(NavigationRoutes.MAIN, {
+      screen: NavigationRoutes.ORDERS_TAB,
+      params: {screen: NavigationRoutes.ORDER_DETAILS, params: {orderId}},
+    });
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -88,7 +92,7 @@ const OrdersScreen = () => {
     });
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'Delivered':
         return '$green10';

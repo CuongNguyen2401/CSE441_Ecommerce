@@ -14,6 +14,7 @@ import {
   View
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationRoutes } from 'navigation/types';
 
 // Mock data for demonstration
 const cartItems = [
@@ -68,7 +69,7 @@ const CartScreen = () => {
   // Total
   const total = subtotal + shippingCost + tax - promoDiscount;
 
-  const handleQuantityChange = (id, newQuantity) => {
+  const handleQuantityChange = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
     
     setItems(items.map(item => 
@@ -76,7 +77,7 @@ const CartScreen = () => {
     ));
   };
 
-  const handleRemoveItem = (id) => {
+  const handleRemoveItem = (id: number) => {
     setItems(items.filter(item => item.id !== id));
   };
 
@@ -92,17 +93,19 @@ const CartScreen = () => {
   };
 
   const handleCheckout = () => {
-    navigation.navigate('Checkout');
+    navigation.navigate(NavigationRoutes.CHECKOUT);
   };
 
   const handleContinueShopping = () => {
-    navigation.navigate('ProductsTab');
+    navigation.navigate(NavigationRoutes.MAIN, {
+      screen: NavigationRoutes.HOME_TAB,
+      params: {screen: NavigationRoutes.HOME},
+    });
   };
-
   return (
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
-        <YStack padding="$4" space="$4">
+        <YStack padding="$4" gap="$4">
           <H4>Shopping Cart ({items.length} items)</H4>
 
           {items.length === 0 ? (
@@ -123,18 +126,18 @@ const CartScreen = () => {
           ) : (
             <>
               {/* Cart Items */}
-              <YStack space="$3">
+              <YStack gap="$3">
                 {items.map(item => (
                   <Card key={item.id} bordered padding="$3">
-                    <XStack space="$3">
+                    <XStack gap="$3">
                       <Image
                         source={{ uri: item.image }}
                         width={80}
                         height={80}
-                        resizeMode="cover"
+                        objectFit="cover"
                         borderRadius="$2"
                       />
-                      <YStack flex={1} space="$1">
+                      <YStack flex={1} gap="$1">
                         <Text fontSize="$3" fontWeight="bold" numberOfLines={1}>
                           {item.name}
                         </Text>
@@ -152,7 +155,7 @@ const CartScreen = () => {
                         )}
                         
                         <XStack justifyContent="space-between" alignItems="center" marginTop="$2">
-                          <XStack alignItems="center" space="$1">
+                          <XStack alignItems="center" gap="$1">
                             <Button
                               size="$2"
                               onPress={() => handleQuantityChange(item.id, item.quantity - 1)}
@@ -185,9 +188,9 @@ const CartScreen = () => {
 
               {/* Promo Code */}
               <Card bordered padding="$3">
-                <YStack space="$2">
+                <YStack gap="$2">
                   <Text fontSize="$3" fontWeight="bold">Promo Code</Text>
-                  <XStack space="$2">
+                  <XStack gap="$2">
                     <Input
                       flex={1}
                       placeholder="Enter promo code"
@@ -209,7 +212,7 @@ const CartScreen = () => {
 
               {/* Order Summary */}
               <Card bordered padding="$3">
-                <YStack space="$2">
+                <YStack gap="$2">
                   <Text fontSize="$3" fontWeight="bold">Order Summary</Text>
                   
                   <XStack justifyContent="space-between">

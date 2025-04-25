@@ -58,10 +58,10 @@ const EditProfileScreen = () => {
 
 	return (
 		<ScrollView flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				<H4>Edit Profile</H4>
 
-				<YStack space="$4" alignItems="center">
+				<YStack gap="$4" alignItems="center">
 					<Avatar circular size="$10">
 						<Avatar.Image src={avatar}/>
 						<Avatar.Fallback backgroundColor="$blue10">
@@ -78,8 +78,8 @@ const EditProfileScreen = () => {
 				</YStack>
 
 				<Form onSubmit={handleSave}>
-					<YStack space="$4">
-						<YStack space="$1">
+					<YStack gap="$4">
+						<YStack gap="$1">
 							<Label htmlFor="name" fontSize="$3">Full Name</Label>
 							<Input
 								id="name"
@@ -90,7 +90,7 @@ const EditProfileScreen = () => {
 							/>
 						</YStack>
 
-						<YStack space="$1">
+						<YStack gap="$1">
 							<Label htmlFor="email" fontSize="$3">Email</Label>
 							<Input
 								id="email"
@@ -103,7 +103,7 @@ const EditProfileScreen = () => {
 							/>
 						</YStack>
 
-						<YStack space="$1">
+						<YStack gap="$1">
 							<Label htmlFor="phone" fontSize="$3">Phone Number</Label>
 							<Input
 								id="phone"
@@ -121,7 +121,7 @@ const EditProfileScreen = () => {
 							</Text>
 						) : null}
 
-						<XStack space="$3" marginTop="$2">
+						<XStack gap="$3" marginTop="$2">
 							<Button
 								flex={1}
 								size="$4"
@@ -140,7 +140,7 @@ const EditProfileScreen = () => {
 								disabled={isLoading}
 							>
 								{isLoading ? (
-									<XStack space="$2" alignItems="center">
+									<XStack gap="$2" alignItems="center">
 										<Spinner size="small" color="white"/>
 										<Text color="white">Saving...</Text>
 									</XStack>
@@ -153,7 +153,7 @@ const EditProfileScreen = () => {
 				</Form>
 
 				<Card bordered padding="$3" marginTop="$4">
-					<YStack space="$3">
+					<YStack gap="$3">
 						<Text fontSize="$3" fontWeight="bold" color="$red10">Danger Zone</Text>
 
 						<Button

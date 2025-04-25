@@ -2,12 +2,14 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "baseUrl": "src",
+    "target": "esnext",
+    "module": "esnext",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
     "paths": {
       "@screens/*": ["screens/*"]
-    },
+    }
     // "noEmit": true,
     // "allowImportingTsExtensions": true
   },

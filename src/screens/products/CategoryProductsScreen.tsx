@@ -20,6 +20,7 @@ import {
 	View
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationRoutes } from 'navigation/types';
 
 // Mock data for demonstration
 const allProducts = [
@@ -105,7 +106,7 @@ const CategoryProductsScreen = () => {
 	};
 
 	const handleProductPress = (product: { id: any; name?: string; price?: number; image?: string; category?: string; }) => {
-		navigation.navigate('ProductDetails', {productId: product.id});
+		navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {productId: product.id});
 	};
 
 	if (isLoading) {
@@ -118,7 +119,7 @@ const CategoryProductsScreen = () => {
 
 	return (
 		<YStack flex={1} backgroundColor="$background">
-			<YStack padding="$4" space="$4">
+			<YStack padding="$4" gap="$4">
 				<H4>{category}</H4>
 
 				{/* Search Bar */}
@@ -127,7 +128,7 @@ const CategoryProductsScreen = () => {
 					borderRadius="$4"
 					padding="$2"
 					alignItems="center"
-					space="$2"
+					gap="$2"
 				>
 					<Icon name="search" size={24} color="#999"/>
 					<Input
@@ -182,9 +183,9 @@ const CategoryProductsScreen = () => {
 										source={{uri: product.image}}
 										width="100%"
 										height={150}
-										resizeMode="cover"
+										objectFit="cover"
 									/>
-									<YStack padding="$2" space="$1">
+									<YStack padding="$2" gap="$1">
 										<Text fontSize="$3" numberOfLines={1} fontWeight="bold">
 											{product.name}
 										</Text>
