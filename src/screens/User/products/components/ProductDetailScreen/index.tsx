@@ -1,7 +1,7 @@
-import type { ParamListBase } from '@react-navigation/native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { NavigationRoutes } from 'navigation/types';
-import React, { useEffect, useState } from 'react';
+import type {ParamListBase} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {NavigationRoutes} from 'navigation/types';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   Button,
@@ -16,7 +16,7 @@ import {
   Tabs,
   Text,
   XStack,
-  YStack
+  YStack,
 } from 'tamagui';
 
 type ProductDetailsParams = {
@@ -31,45 +31,64 @@ const product = {
   discountPrice: 149.99,
   rating: 4.5,
   reviewCount: 128,
-  description: 'Experience premium sound quality with these wireless noise cancelling headphones. Features include 30-hour battery life, comfortable over-ear design, and advanced noise cancellation technology.',
+  description:
+    'Experience premium sound quality with these wireless noise cancelling headphones. Features include 30-hour battery life, comfortable over-ear design, and advanced noise cancellation technology.',
   features: [
     'Active Noise Cancellation',
     'Bluetooth 5.0 Connectivity',
     '30-hour Battery Life',
     'Quick Charge (5 min = 3 hours playback)',
     'Built-in Microphone for Calls',
-    'Voice Assistant Compatible'
+    'Voice Assistant Compatible',
   ],
   specifications: [
-    { name: 'Brand', value: 'SoundMaster' },
-    { name: 'Model', value: 'WH-1000XM4' },
-    { name: 'Color', value: 'Black' },
-    { name: 'Weight', value: '254g' },
-    { name: 'Connectivity', value: 'Bluetooth 5.0, 3.5mm jack' },
-    { name: 'Battery', value: '30 hours (with ANC)' }
+    {name: 'Brand', value: 'SoundMaster'},
+    {name: 'Model', value: 'WH-1000XM4'},
+    {name: 'Color', value: 'Black'},
+    {name: 'Weight', value: '254g'},
+    {name: 'Connectivity', value: 'Bluetooth 5.0, 3.5mm jack'},
+    {name: 'Battery', value: '30 hours (with ANC)'},
   ],
   images: [
     'https://placekitten.com/400/400',
     'https://placekitten.com/401/400',
     'https://placekitten.com/402/400',
-    'https://placekitten.com/403/400'
+    'https://placekitten.com/403/400',
   ],
   colors: ['Black', 'Silver', 'Blue'],
-  inStock: true
+  inStock: true,
 };
 
 // Related products
 const relatedProducts = [
-  { id: 2, name: 'Wireless Earbuds', price: 89.99, image: 'https://placekitten.com/200/200' },
-  { id: 3, name: 'Bluetooth Speaker', price: 79.99, image: 'https://placekitten.com/201/201' },
-  { id: 4, name: 'Audio Cable', price: 19.99, image: 'https://placekitten.com/202/202' },
+  {
+    id: 2,
+    name: 'Wireless Earbuds',
+    price: 89.99,
+    image: 'https://placekitten.com/200/200',
+  },
+  {
+    id: 3,
+    name: 'Bluetooth Speaker',
+    price: 79.99,
+    image: 'https://placekitten.com/201/201',
+  },
+  {
+    id: 4,
+    name: 'Audio Cable',
+    price: 19.99,
+    image: 'https://placekitten.com/202/202',
+  },
 ];
 
-const ProductDetailsScreen = () => {
+const ProductDetailScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<ParamListBase & { params: ProductDetailsParams }, 'params'>>();
-  const { productId } = route.params || { productId: 1 };
-  
+  const route =
+    useRoute<
+      RouteProp<ParamListBase & {params: ProductDetailsParams}, 'params'>
+    >();
+  const {productId} = route.params;
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [quantity, setQuantity] = useState(1);
@@ -361,4 +380,4 @@ const ProductDetailsScreen = () => {
   );
 };
 
-export default ProductDetailsScreen;
+export default ProductDetailScreen;

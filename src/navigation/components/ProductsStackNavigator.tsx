@@ -3,11 +3,11 @@ import React, { lazy } from 'react';
 import { NavigationRoutes, ProductsStackParamList } from '../types';
 
 // Import base screen
-import ProductsScreen from '@screens/products/ProductsScreen';
+import ProductsScreen from '@screens/User/products/components/ProductScreen';
 
 // Lazy load secondary screens
-const ProductDetailsScreen = lazy(() => import('@screens/products/ProductDetailsScreen'));
-const CategoryProductsScreen = lazy(() => import('@screens/products/CategoryProductsScreen'));
+const ProductDetailsScreen = lazy(() => import('@screens/User/products/components/ProductDetailScreen'));
+const CategoryProductsScreen = lazy(() => import('@screens/User/products/components/CategoryProductScreen'));
 // const SearchScreen = lazy(() => import('@screen/products/SearchScreen'));
 
 const ProductsStack = createNativeStackNavigator<ProductsStackParamList>();

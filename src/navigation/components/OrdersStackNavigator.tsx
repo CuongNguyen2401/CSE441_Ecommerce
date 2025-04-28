@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { lazy } from 'react';
 import { NavigationRoutes, OrdersStackParamList } from '../types';
-import OrdersScreen from '@screens/orders/OrdersScreen';
-const CheckoutScreen = lazy(() => import('@screens/cart/CheckoutScreen'));
-const PaymentSuccessScreen = lazy(() => import('@screens/cart/PaymentSuccessScreen'));
+import OrdersScreen from '@screens/User/orders/OrdersScreen';
+const CheckoutScreen = lazy(() => import('@screens/User/cart/CheckoutScreen'));
+const PaymentSuccessScreen = lazy(() => import('@screens/User/cart/PaymentSuccessScreen'));
 
 const OrdersStack = createNativeStackNavigator<OrdersStackParamList>();
 

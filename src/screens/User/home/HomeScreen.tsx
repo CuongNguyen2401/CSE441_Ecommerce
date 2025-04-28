@@ -15,7 +15,7 @@ import {
 	YStack
 } from 'tamagui';
 import { Category, Product } from "../products/helpers";
-import { HomeStackParamList, NavigationRoutes } from '../../navigation/types';
+import { HomeStackParamList, NavigationRoutes } from '../../../navigation/types';
 
 const categories = [
 	{id: 1, name: 'Electronics', icon: 'devices'},

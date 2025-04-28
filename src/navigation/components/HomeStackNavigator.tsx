@@ -1,11 +1,15 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { lazy } from 'react';
-import { HomeStackParamList, NavigationRoutes } from '../types';
-import HomeScreen from '@screens/home/HomeScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {lazy} from 'react';
+import {HomeStackParamList, NavigationRoutes} from '../types';
+import HomeScreen from '@screens/User/home/HomeScreen';
 
 // Lazy load secondary screens
-const ProductDetailsScreen = lazy(() => import('@screens/products/ProductDetailsScreen'));
-const CategoryProductsScreen = lazy(() => import('@screens/products/CategoryProductsScreen'));
+const ProductDetailsScreen = lazy(
+  () => import('@screens/User/products/components/ProductDetailScreen'),
+);
+const CategoryProductsScreen = lazy(
+  () => import('@screens/User/products/components/CategoryProductScreen'),
+);
 // const SearchScreen = lazy(() => import('@screens/products/SearchScreen'));
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();

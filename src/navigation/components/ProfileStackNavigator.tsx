@@ -1,14 +1,14 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { lazy } from 'react';
 import { NavigationRoutes, ProfileStackParamList } from '../types';
-import ProfileScreen from '@screens/profile/ProfileScreen';
+import ProfileScreen from '@screens/User/profile/ProfileScreen';
 
-const EditProfileScreen = lazy(() => import('@screens/profile/EditProfileScreen'));
-const AddressesScreen = lazy(() => import('@screens/profile/AddressesScreen'));
-const AddAddressScreen = lazy(() => import('@screens/profile/AddAddressScreen'));
-const EditAddressScreen = lazy(() => import('@screens/profile/EditAddressScreen'));
-const SettingsScreen = lazy(() => import('@screens/profile/SettingsScreen'));
-const AboutScreen = lazy(() => import('@screens/profile/AboutScreen'));
+const EditProfileScreen = lazy(() => import('@screens/User/profile/EditProfileScreen'));
+const AddressesScreen = lazy(() => import('@screens/User/profile/AddressesScreen'));
+const AddAddressScreen = lazy(() => import('@screens/User/profile/AddAddressScreen'));
+const EditAddressScreen = lazy(() => import('@screens/User/profile/EditAddressScreen'));
+const SettingsScreen = lazy(() => import('@screens/User/profile/SettingsScreen'));
+const AboutScreen = lazy(() => import('@screens/User/profile/AboutScreen'));
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
 

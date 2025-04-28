@@ -1,22 +1,20 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
-  YStack,
-  XStack,
-  Text,
+  Adapt,
+  AlertDialog,
   Button,
-  ScrollView,
   Card,
   H4,
-  Separator,
-  Switch,
+  ScrollView,
   Select,
-  Adapt,
   Sheet,
-  AlertDialog,
-  Paragraph,
+  Switch,
+  Text,
+  XStack,
+  YStack
 } from 'tamagui';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();

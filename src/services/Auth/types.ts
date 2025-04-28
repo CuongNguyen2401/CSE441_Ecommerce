@@ -3,7 +3,7 @@ export interface Auth {
   refreshToken: string;
 }
 export enum LoginKey {
-  USERNAME = 'username',
+  USERNAME = 'email',
   PASSWORD = 'password',
 }
 

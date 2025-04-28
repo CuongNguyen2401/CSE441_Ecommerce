@@ -47,7 +47,7 @@ const RegisterScreen = () => {
 
 	return (
 		<ScrollView flex={1} backgroundColor="$background">
-			<YStack padding="$6" space="$4" flex={1}>
+			<YStack padding="$6" gap="$4" flex={1}>
 				<YStack alignItems="center" marginVertical="$4">
 					<Text fontSize="$8" fontWeight="bold" color="$color">
 						Create Account
@@ -58,7 +58,7 @@ const RegisterScreen = () => {
 				</YStack>
 
 				<Form onSubmit={handleRegister}>
-					<YStack space="$4">
+					<YStack gap="$4">
 						<YStack>
 							<Text fontSize="$3" color="$color" marginBottom="$2">
 								Full Name
@@ -111,7 +111,7 @@ const RegisterScreen = () => {
 							/>
 						</YStack>
 
-						<XStack alignItems="center" space="$2">
+						<XStack alignItems="center" gap="$2">
 							<Checkbox
 								id="terms"
 								checked={agreeToTerms}
@@ -144,7 +144,7 @@ const RegisterScreen = () => {
 				</Form>
 
 				<YStack alignItems="center" marginTop="$4">
-					<XStack space="$2" alignItems="center">
+					<XStack gap="$2" alignItems="center">
 						<Text fontSize="$3" color="$color">
 							Already have an account?
 						</Text>

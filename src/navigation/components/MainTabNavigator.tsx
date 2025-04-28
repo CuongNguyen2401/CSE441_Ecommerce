@@ -10,7 +10,7 @@ import OrdersStackNavigator from './OrdersStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
 
 // Lazy load screens
-const CartScreen = lazy(() => import('@screens/cart/CartScreen'));
+const CartScreen = lazy(() => import('@screens/User/cart/CartScreen'));
 
 const MainTab = createBottomTabNavigator<MainTabParamList>();
 

@@ -1,7 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList, NavigationRoutes} from '../../../navigation/types';
 import React, {useState} from 'react';
+import {Alert} from 'react-native';
+import {useGetUserInfo} from 'services/Auth/useGetUserInfo';
+import {useLogin} from 'services/Auth/useLogin';
+import {useAuthStore} from 'store/auth/useAuthStore';
 import {
   Button,
   Form,
@@ -12,11 +16,7 @@ import {
   XStack,
   YStack,
 } from 'tamagui';
-import {Alert} from 'react-native';
-import {useLogin} from 'services/Auth/useLogin';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useAuthStore} from 'store/auth/useAuthStore';
-import {useGetUserInfo} from 'services/Auth/useGetUserInfo';
+import {NavigationRoutes, RootStackParamList} from '../../../navigation/types';
 
 const LoginScreen = () => {
   const navigation =
@@ -26,9 +26,7 @@ const LoginScreen = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const {onLogin} = useLogin({
+  const {onLogin, isLoading, isError} = useLogin({
     onSuccess: data => {
       const {accessToken, refreshToken} = data.result;
       Alert.alert('Login Success', 'You have successfully logged in', [
@@ -56,12 +54,10 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Please enter both email and password');
+      Alert.alert('Error', 'Please enter both email and password');
       return;
     }
-
-    setIsLoading(true);
-    setError('');
+    onLogin({email, password});
     navigation.reset({
       index: 0,
       routes: [{name: NavigationRoutes.MAIN}],
@@ -131,9 +127,9 @@ const LoginScreen = () => {
               </Button>
             </XStack>
 
-            {error ? (
+            {isError ? (
               <Text color="$red10" fontSize="$2" textAlign="center">
-                {error}
+                Please enter both email and password
               </Text>
             ) : null}
 

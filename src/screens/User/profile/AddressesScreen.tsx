@@ -14,7 +14,7 @@ import {
 	Paragraph,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {NavigationRoutes, ProfileStackParamList} from '../../navigation/types';
+import {NavigationRoutes, ProfileStackParamList} from '../../../navigation/types';
 
 // Mock data for demonstration
 const addresses = [
