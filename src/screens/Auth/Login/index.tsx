@@ -17,51 +17,59 @@ import {
   YStack,
 } from 'tamagui';
 import {NavigationRoutes, RootStackParamList} from '../../../navigation/types';
+import Toast from 'react-native-toast-message';
 
 const LoginScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {setUser, setTokens} = useAuthStore();
-  const {data: userinfo, onGetUserInfo} = useGetUserInfo();
+  const {onGetUserInfo} = useGetUserInfo({
+    enabled: false,
+    onSuccess: userData => {
+      setUser(userData);
+      console.log('User info fetched successfully:', userData);
+    },
+  });
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {onLogin, isLoading, isError} = useLogin({
     onSuccess: data => {
       const {accessToken, refreshToken} = data.result;
-      Alert.alert('Login Success', 'You have successfully logged in', [
-        {
-          text: accessToken,
-          onPress: () => console.log('OK Pressed'),
-        },
-      ]);
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+        text2: 'Welcome to my app!',
+      });
       AsyncStorage.setItem('accessToken', accessToken).catch(error => {
         console.error('Failed to save access token:', error);
       });
       setTokens(accessToken, refreshToken);
-      //test
       if (accessToken) {
-        onGetUserInfo().catch(error => {
-          console.error('Failed to get user info:', error);
+        onGetUserInfo();
+
+        // Navigate after everything is done
+        navigation.reset({
+          index: 0,
+          routes: [{name: NavigationRoutes.MAIN}],
         });
-        console.log('🚀 ~ LoginScreen ~ userinfo:', userinfo);
       }
     },
     onError: error => {
       console.error('Login failed:', error);
     },
   });
-
+  const handleSignUp = () => {
+    navigation.navigate(NavigationRoutes.AUTH, {
+      screen: NavigationRoutes.REGISTER,
+    });
+  };
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please enter both email and password');
       return;
     }
-    onLogin({email, password});
-    navigation.reset({
-      index: 0,
-      routes: [{name: NavigationRoutes.MAIN}],
-    });
+    onLogin({username: email, password});
   };
 
   return (
@@ -87,7 +95,7 @@ const LoginScreen = () => {
           <YStack gap="$4">
             <YStack>
               <Text fontSize="$3" color="$color" marginBottom="$2">
-                Email
+                Username
               </Text>
               <Input
                 size="$4"
@@ -148,12 +156,7 @@ const LoginScreen = () => {
             <Text fontSize="$3" color="$color">
               Don't have an account?
             </Text>
-            <Button
-              onPress={() =>
-                navigation.navigate(NavigationRoutes.AUTH, {
-                  screen: NavigationRoutes.REGISTER,
-                })
-              }>
+            <Button onPress={handleSignUp}>
               <Text color="$blue10" fontSize="$3" fontWeight="bold">
                 Sign Up
               </Text>

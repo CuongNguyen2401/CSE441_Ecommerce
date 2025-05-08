@@ -28,15 +28,16 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Suspense fallback={<LoadingScreen />}>
-        <RootStack.Navigator screenOptions={{headerShown: false}}>
-          <RootStack.Screen
-            name={NavigationRoutes.MAIN}
-            component={MainTabNavigator}
-          />
-
+        <RootStack.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName={NavigationRoutes.AUTH}>
           <RootStack.Screen
             name={NavigationRoutes.AUTH}
             component={AuthNavigator}
+          />
+          <RootStack.Screen
+            name={NavigationRoutes.MAIN}
+            component={MainTabNavigator}
           />
           <RootStack.Screen
             name={NavigationRoutes.FORGOT_PASSWORD}

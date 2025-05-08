@@ -15,6 +15,7 @@ export function useGetUserInfo(
     error,
     isError,
     isFetching,
+    isSuccess,
     refetch: onGetUserInfo,
   } = useQuery<ApiResponseType<User>, Error, User>(
     [API_KEYS.USER_INFO],
@@ -27,6 +28,7 @@ export function useGetUserInfo(
       ...options,
     },
   );
+
   const queryClient = useQueryClient();
 
   const handleInvalidateUserInfo = () => queryClient.invalidateQueries(API_KEYS.USER_INFO);
@@ -35,6 +37,7 @@ export function useGetUserInfo(
     data,
     error,
     isError,
+    isSuccess,
     isFetching,
     onGetUserInfo,
     handleInvalidateUserInfo,

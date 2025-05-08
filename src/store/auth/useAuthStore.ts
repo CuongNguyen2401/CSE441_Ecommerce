@@ -1,11 +1,11 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import { User } from './types';
+import {create} from 'zustand';
+import {persist, createJSONStorage, StateStorage} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {User} from './types';
 
 interface AuthState {
   user: User | null;
-
+  role: string[] | null;
   accessTokenState: string | null;
   refreshTokenState: string | null;
   setUser: (user: User) => void;
@@ -14,7 +14,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-  persist<AuthState>(
+  persist(
     set => ({
       user: null,
       role: null,
@@ -22,22 +22,20 @@ export const useAuthStore = create<AuthState>()(
       refreshTokenState: null,
 
       setUser: user => set({user}),
-
       setTokens: (accessToken, refreshToken) =>
         set({accessTokenState: accessToken, refreshTokenState: refreshToken}),
 
       clearAuth: () =>
         set({
           user: null,
+          role: null,
           accessTokenState: null,
           refreshTokenState: null,
         }),
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() =>
-       AsyncStorage,
-      ),
+      storage: createJSONStorage(() => AsyncStorage as StateStorage),
     },
   ),
 );

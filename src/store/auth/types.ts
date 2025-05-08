@@ -2,16 +2,16 @@ export type User = {
   id: number;
   username: string;
   firstName: string;
-  middleName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
   gender: Gender;
   address: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   status: UserStatus;
   avatar: string;
   roles?: Role[];
+  createdAt: string;
 };
 export enum UserStatus {
   ACTIVE = 'ACTIVE',

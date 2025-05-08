@@ -1,62 +1,60 @@
-import { createInterFont } from '@tamagui/font-inter';
-import { shorthands } from '@tamagui/shorthands';
-import { themes, tokens } from '@tamagui/themes';
-import { createTamagui } from 'tamagui';
+import {createInterFont} from '@tamagui/font-inter';
+import {shorthands} from '@tamagui/shorthands';
+import {themes, tokens} from '@tamagui/themes';
+import {createTamagui} from 'tamagui';
 import {createAnimations} from '@tamagui/animations-react-native';
 
-
-
 const headingFont = createInterFont({
-    size: {
-        6: 15,
-        7: 18,
-        8: 20,
-        9: 23,
-        10: 27,
-        12: 32,
-        14: 38,
-        16: 46,
-    },
-    transform: {
-        6: 'uppercase',
-        7: 'none',
-    },
-    weight: {
-        6: '400',
-        7: '700',
-    },
-    color: {
-        6: '$colorFocus',
-        7: '$color',
-    },
-    letterSpacing: {
-        5: 2,
-        6: 1,
-        7: 0,
-        8: -1,
-        9: -2,
-        10: -3,
-        12: -4,
-        14: -5,
-        16: -6,
-    },
-    face: {
-        700: {normal: 'InterBold'},
-        800: {normal: 'InterBold'},
-        900: {normal: 'InterBold'},
-    },
+  size: {
+    6: 15,
+    7: 18,
+    8: 20,
+    9: 23,
+    10: 27,
+    12: 32,
+    14: 38,
+    16: 46,
+  },
+  transform: {
+    6: 'uppercase',
+    7: 'none',
+  },
+  weight: {
+    6: '400',
+    7: '700',
+  },
+  color: {
+    6: '$colorFocus',
+    7: '$color',
+  },
+  letterSpacing: {
+    5: 2,
+    6: 1,
+    7: 0,
+    8: -1,
+    9: -2,
+    10: -3,
+    12: -4,
+    14: -5,
+    16: -6,
+  },
+  face: {
+    700: {normal: 'InterBold'},
+    800: {normal: 'InterBold'},
+    900: {normal: 'InterBold'},
+  },
 });
 
 const bodyFont = createInterFont(
-    {
-        face: {
-            700: {normal: 'InterBold'},
-        },
+  {
+    face: {
+      700: {normal: 'InterBold'},
     },
-    {
-        sizeSize: (size) => Math.round(size * 1.1),
-        sizeLineHeight: (size) => Math.round(size * 1.5),
-    }
+  },
+  {
+    sizeSize: size => Math.round(size * 1.1),
+    sizeLineHeight: size => Math.round(size * 1.5),
+  },
 );
 
 const config = createTamagui({
@@ -104,13 +102,10 @@ const config = createTamagui({
   }),
 });
 
-
-
 export type AppConfig = typeof config;
 
 declare module 'tamagui' {
-    interface TamaguiCustomConfig extends AppConfig {
-    }
+  interface TamaguiCustomConfig extends AppConfig {}
 }
 
 export default config;

@@ -13,7 +13,7 @@ const useApi = (baseURL = API_URL) => {
   };
 
   const getUserInfo = () => {
-    return privateApi.get('/api/v1/users/me');
+    return privateApi.get('/api/v1/users/myInfo');
   };
 
   const getRefreshToken = () => {
