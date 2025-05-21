@@ -1,5 +1,4 @@
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
 import {
   YStack,
   XStack,
@@ -16,35 +15,21 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useProfileScreen} from './useProfileScreen';
 import {formatDate} from 'utils/formatDateUtil';
-import { NO_DATA } from 'utils';
-
+import {NO_DATA} from 'utils';
 
 const ProfileScreen = () => {
   const {
     state: {user: userData},
+    handlers: {
+      handleEditProfile,
+      handleAddresses,
+      handleSettings,
+      handleAbout,
+      handleLogout,
+      handleOrdersPress,
+      handleCartPress,
+    },
   } = useProfileScreen();
-
-  const navigation = useNavigation();
-
-  const handleEditProfile = () => {
-    //navigation.navigate('EditProfile');
-  };
-
-  const handleAddresses = () => {
-    //navigation.navigate('Addresses');
-  };
-
-  const handleSettings = () => {
-    //navigation.navigate('Settings');
-  };
-
-  const handleAbout = () => {
-    //navigation.navigate('About');
-  };
-
-  const handleLogout = () => {
-    // Navigation will be handled by the auth state change in AppNavigator
-  };
 
   return (
     <ScrollView flex={1} backgroundColor="$background">
@@ -63,13 +48,15 @@ const ProfileScreen = () => {
 
             <YStack alignItems="center">
               <Text fontSize="$6" fontWeight="bold">
-                {`${userData?.firstName ?? NO_DATA} ${userData?.lastName ?? NO_DATA}`}
+                {`${userData?.firstName ?? NO_DATA} ${
+                  userData?.lastName ?? NO_DATA
+                }`}
               </Text>
               <Text fontSize="$3" color="$gray10">
                 {userData?.email}
               </Text>
               <Text fontSize="$2" color="$gray10" marginTop="$1">
-                Member since {formatDate(userData!.createdAt)}
+                Member since {formatDate(userData!.createdDate)}
               </Text>
             </YStack>
 
@@ -90,8 +77,7 @@ const ProfileScreen = () => {
                 size="$4"
                 justifyContent="flex-start"
                 backgroundColor="transparent"
-                //onPress={() => navigation.navigate('OrdersTab')}
-              >
+                onPress={() => handleOrdersPress()}>
                 <XStack gap="$3" flex={1} alignItems="center">
                   <Icon name="receipt" size={24} color="#666" />
                   <Text fontSize="$3">My Orders</Text>
@@ -99,9 +85,7 @@ const ProfileScreen = () => {
                   <Icon name="chevron-right" size={24} color="#666" />
                 </XStack>
               </Button>
-
               <Separator />
-
               <Button
                 size="$4"
                 justifyContent="flex-start"
@@ -114,15 +98,12 @@ const ProfileScreen = () => {
                   <Icon name="chevron-right" size={24} color="#666" />
                 </XStack>
               </Button>
-
               <Separator />
-
               <Button
                 size="$4"
                 justifyContent="flex-start"
                 backgroundColor="transparent"
-                //onPress={() => navigation.navigate('CartTab')}
-              >
+                onPress={() => handleCartPress()}>
                 <XStack gap="$3" flex={1} alignItems="center">
                   <Icon name="shopping-cart" size={24} color="#666" />
                   <Text fontSize="$3">My Cart</Text>

@@ -24,10 +24,8 @@ const LoginScreen = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {setUser, setTokens} = useAuthStore();
   const {onGetUserInfo} = useGetUserInfo({
-    enabled: false,
     onSuccess: userData => {
       setUser(userData);
-      console.log('User info fetched successfully:', userData);
     },
   });
 
@@ -47,8 +45,6 @@ const LoginScreen = () => {
       setTokens(accessToken, refreshToken);
       if (accessToken) {
         onGetUserInfo();
-
-        // Navigate after everything is done
         navigation.reset({
           index: 0,
           routes: [{name: NavigationRoutes.MAIN}],
