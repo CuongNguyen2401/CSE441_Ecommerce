@@ -11,7 +11,7 @@ export type User = {
   status: UserStatus;
   avatar: string;
   roles?: Role[];
-  createdAt: string;
+  createdDate: string;
 };
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
