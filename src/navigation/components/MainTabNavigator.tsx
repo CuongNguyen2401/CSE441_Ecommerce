@@ -1,7 +1,7 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { lazy } from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React, {lazy} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { MainTabParamList, NavigationRoutes } from '../types';
+import {MainTabParamList, NavigationRoutes} from '../types';
 
 // Import navigators
 import HomeStackNavigator from './HomeStackNavigator';
@@ -17,7 +17,7 @@ const MainTab = createBottomTabNavigator<MainTabParamList>();
 // Tab bar icon component
 const getTabBarIcon = (route: string, color: string, size: number) => {
   let iconName = '';
-  
+
   if (route === NavigationRoutes.HOME_TAB) {
     iconName = 'home';
   } else if (route === NavigationRoutes.PRODUCTS_TAB) {

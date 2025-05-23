@@ -10,14 +10,15 @@ type PaymentSuccessParams = {
 
 const PaymentSuccessScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<Record<string, PaymentSuccessParams>, string>>();
+  const route =
+    useRoute<RouteProp<Record<string, PaymentSuccessParams>, string>>();
   const {orderId} = route.params as PaymentSuccessParams;
 
   const formattedOrderId = `#${orderId.toString().padStart(6, '0')}`;
 
   const currentDate = new Date();
   const deliveryDate = new Date(currentDate);
-  deliveryDate.setDate(currentDate.getDate() + 5); 
+  deliveryDate.setDate(currentDate.getDate() + 5);
 
   const formattedDeliveryDate = deliveryDate.toLocaleDateString('en-US', {
     weekday: 'long',

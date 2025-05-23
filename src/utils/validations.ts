@@ -7,5 +7,4 @@ export const isEmpty = (value: any): boolean =>
 
 export const isNumeric = (num: any) => !isNaN(num);
 
-
 export const NO_DATA = '';

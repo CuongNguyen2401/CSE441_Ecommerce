@@ -12,6 +12,7 @@ export function useGetAllProducts(
     error,
     isError,
     isFetching,
+    isLoading,
     refetch: onGetAllProducts,
   } = useQuery<ProductResponse[], Error>([API_KEYS.All_PRODUCTS], {
     queryFn: async () => {
@@ -32,7 +33,7 @@ export function useGetAllProducts(
     products,
     error,
     isError,
-    isFetching,
+    isPending: isLoading || isFetching,
     onGetAllProducts,
     handleInvalidateAllProducts,
   };

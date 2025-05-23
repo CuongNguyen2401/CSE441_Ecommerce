@@ -13,4 +13,3 @@ export enum API_KEYS {
 }
 
 export const API_URL = Constants.expoConfig?.extra?.apiUrl;
-
