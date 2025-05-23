@@ -1,7 +1,8 @@
 import type {ParamListBase} from '@react-navigation/native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NavigationRoutes} from 'navigation/types';
-import React, {useEffect, useState} from 'react';
+import {useGetProductById} from 'queries/product/useGetProductById';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   Button,
@@ -23,44 +24,8 @@ type ProductDetailsParams = {
   productId: number;
 };
 
-// Mock data for demonstration
-const product = {
-  id: 1,
-  name: 'Wireless Noise Cancelling Headphones',
-  price: 199.99,
-  discountPrice: 149.99,
-  rating: 4.5,
-  reviewCount: 128,
-  description:
-    'Experience premium sound quality with these wireless noise cancelling headphones. Features include 30-hour battery life, comfortable over-ear design, and advanced noise cancellation technology.',
-  features: [
-    'Active Noise Cancellation',
-    'Bluetooth 5.0 Connectivity',
-    '30-hour Battery Life',
-    'Quick Charge (5 min = 3 hours playback)',
-    'Built-in Microphone for Calls',
-    'Voice Assistant Compatible',
-  ],
-  specifications: [
-    {name: 'Brand', value: 'SoundMaster'},
-    {name: 'Model', value: 'WH-1000XM4'},
-    {name: 'Color', value: 'Black'},
-    {name: 'Weight', value: '254g'},
-    {name: 'Connectivity', value: 'Bluetooth 5.0, 3.5mm jack'},
-    {name: 'Battery', value: '30 hours (with ANC)'},
-  ],
-  images: [
-    'https://placekitten.com/400/400',
-    'https://placekitten.com/401/400',
-    'https://placekitten.com/402/400',
-    'https://placekitten.com/403/400',
-  ],
-  colors: ['Black', 'Silver', 'Blue'],
-  inStock: true,
-};
-
-// Related products
-const relatedProducts = [
+// Mock data only for related products and UI states that don't come from the API
+const mockRelatedProducts = [
   {
     id: 2,
     name: 'Wireless Earbuds',
@@ -89,33 +54,25 @@ const ProductDetailScreen = () => {
     >();
   const {productId} = route.params;
 
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [quantity, setQuantity] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  // Fetch product data
+  const {product, isPending} = useGetProductById({productId});
 
-  // In a real app, you would fetch the product details based on productId
-  useEffect(() => {
-    // Simulate loading
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-  }, [productId]);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = () => {
     // In a real app, you would add the product to the cart
-    console.log(`Added ${quantity} ${product.name} (${selectedColor}) to cart`);
-    //xnavigation.navigate('CartTab');
+    console.log(`Added ${quantity} ${product?.name} to cart`);
+    //navigation.navigate('CartTab');
   };
 
   const handleBuyNow = () => {
     // In a real app, you would add the product to the cart and navigate to checkout
-    console.log(`Buying ${quantity} ${product.name} (${selectedColor})`);
+    console.log(`Buying ${quantity} ${product?.name}`);
     navigation.navigate(NavigationRoutes.CHECKOUT);
   };
 
-  if (isLoading) {
+  if (isPending || !product) {
     return (
       <YStack flex={1} justifyContent="center" alignItems="center">
         <Spinner size="large" color="$blue10" />
@@ -123,13 +80,18 @@ const ProductDetailScreen = () => {
     );
   }
 
+  // Convert product image to an array if it's a single string
+  const productImages = Array.isArray(product.image)
+    ? product.image
+    : [product.image];
+
   return (
     <ScrollView flex={1} backgroundColor="$background">
       <YStack>
         {/* Product Images */}
         <YStack height={400}>
           <Image
-            source={{uri: product.images[selectedImage]}}
+            source={{uri: productImages[selectedImage]}}
             width="100%"
             height="100%"
             objectFit="cover"
@@ -137,27 +99,29 @@ const ProductDetailScreen = () => {
         </YStack>
 
         {/* Image Thumbnails */}
-        <XStack padding="$2" gap="$2" justifyContent="center">
-          {product.images.map((image, index) => (
-            <Button
-              key={`image-${image}-${index}`}
-              width={60}
-              height={60}
-              borderRadius="$2"
-              borderWidth={selectedImage === index ? 2 : 0}
-              borderColor="$blue10"
-              padding={0}
-              onPress={() => setSelectedImage(index)}>
-              <Image
-                source={{uri: image}}
-                width="100%"
-                height="100%"
-                objectFit="cover"
-                borderRadius="$1"
-              />
-            </Button>
-          ))}
-        </XStack>
+        {productImages.length > 1 && (
+          <XStack padding="$2" gap="$2" justifyContent="center">
+            {productImages.map((image: any, index: any) => (
+              <Button
+                key={`image-${index}`}
+                width={60}
+                height={60}
+                borderRadius="$2"
+                borderWidth={selectedImage === index ? 2 : 0}
+                borderColor="$blue10"
+                padding={0}
+                onPress={() => setSelectedImage(index)}>
+                <Image
+                  source={{uri: image}}
+                  width="100%"
+                  height="100%"
+                  objectFit="cover"
+                  borderRadius="$1"
+                />
+              </Button>
+            ))}
+          </XStack>
+        )}
 
         {/* Product Info */}
         <YStack padding="$4" gap="$4">
@@ -168,19 +132,19 @@ const ProductDetailScreen = () => {
               <XStack alignItems="center">
                 <Icon name="star" size={18} color="#FFD700" />
                 <Text fontSize="$3" marginLeft="$1">
-                  {product.rating}
+                  {product.ratings || 0}
                 </Text>
               </XStack>
               <Text fontSize="$2" color="$gray10">
-                ({product.reviewCount} reviews)
+                (Reviews)
               </Text>
             </XStack>
 
             <XStack alignItems="center" gap="$2" marginTop="$2">
-              {product.discountPrice ? (
+              {product.salePrice ? (
                 <>
                   <Text fontSize="$6" fontWeight="bold" color="$blue10">
-                    ${product.discountPrice.toFixed(2)}
+                    ${product.salePrice.toFixed(2)}
                   </Text>
                   <Text
                     fontSize="$3"
@@ -189,7 +153,7 @@ const ProductDetailScreen = () => {
                     ${product.price.toFixed(2)}
                   </Text>
                   <Text fontSize="$3" color="$green10" fontWeight="bold">
-                    Save ${(product.price - product.discountPrice).toFixed(2)}
+                    Save ${(product.price - product.salePrice).toFixed(2)}
                   </Text>
                 </>
               ) : (
@@ -199,89 +163,87 @@ const ProductDetailScreen = () => {
               )}
             </XStack>
 
-            <Text
-              fontSize="$3"
-              color={product.inStock ? '$green10' : '$red10'}
-              marginTop="$2">
-              {product.inStock ? 'In Stock' : 'Out of Stock'}
-            </Text>
-          </YStack>
-
-          {/* Color Selection */}
-          <YStack gap="$2">
-            <Text fontSize="$3" fontWeight="bold">
-              Color
-            </Text>
-            <XStack gap="$2">
-              {product.colors.map(color => (
-                <Button
-                  key={color}
-                  size="$3"
-                  borderRadius="$2"
-                  backgroundColor={
-                    selectedColor === color ? '$blue5' : '$backgroundHover'
-                  }
-                  borderWidth={selectedColor === color ? 1 : 0}
-                  borderColor="$blue10"
-                  onPress={() => setSelectedColor(color)}>
-                  <Text>{color}</Text>
-                </Button>
-              ))}
+            {/* Stock Status */}
+            <XStack marginTop="$2">
+              <Text
+                fontSize="$3"
+                color={product.quantity > 0 ? '$green10' : '$red10'}
+                fontWeight="bold">
+                {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+              </Text>
             </XStack>
           </YStack>
 
-          {/* Quantity */}
-          <YStack gap="$2">
+          {/* Quantity Selector */}
+          <XStack alignItems="center" gap="$4">
             <Text fontSize="$3" fontWeight="bold">
-              Quantity
+              Quantity:
             </Text>
-            <XStack alignItems="center" gap="$2">
+            <XStack
+              borderWidth={1}
+              borderColor="$gray8"
+              borderRadius="$4"
+              alignItems="center">
               <Button
                 size="$3"
-                onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                disabled={quantity <= 1}>
+                backgroundColor="transparent"
+                borderColor="transparent"
+                onPress={() => setQuantity(Math.max(1, quantity - 1))}>
                 <Icon name="remove" size={20} />
               </Button>
-              <Text fontSize="$4" width={40} textAlign="center">
+              <Text fontSize="$3" paddingHorizontal="$2">
                 {quantity}
               </Text>
-              <Button size="$3" onPress={() => setQuantity(quantity + 1)}>
+              <Button
+                size="$3"
+                backgroundColor="transparent"
+                borderColor="transparent"
+                onPress={() => setQuantity(quantity + 1)}>
                 <Icon name="add" size={20} />
               </Button>
             </XStack>
-          </YStack>
+          </XStack>
 
-          {/* Action Buttons */}
-          <XStack gap="$2" marginTop="$2">
+          {/* Add to Cart & Buy Now */}
+          <XStack gap="$2">
             <Button
               flex={1}
+              backgroundColor="$blue5"
+              color="$blue10"
+              fontWeight="bold"
               size="$4"
-              backgroundColor="$blue10"
-              color="white"
-              onPress={handleAddToCart}
-              disabled={!product.inStock}>
-              <Icon name="shopping-cart" size={20} color="white" />
-              <Text color="white" marginLeft="$1">
+              disabled={product.quantity <= 0}
+              onPress={handleAddToCart}>
+              <Icon name="shopping-cart" size={20} color="#3B82F6" />
+              <Text color="$blue10" marginLeft="$1">
                 Add to Cart
               </Text>
             </Button>
             <Button
               flex={1}
+              backgroundColor="$blue10"
+              fontWeight="bold"
               size="$4"
-              backgroundColor="$orange10"
-              color="white"
-              onPress={handleBuyNow}
-              disabled={!product.inStock}>
-              <Icon name="bolt" size={20} color="white" />
+              disabled={product.quantity <= 0}
+              onPress={handleBuyNow}>
+              <Icon name="flash-on" size={20} color="white" />
               <Text color="white" marginLeft="$1">
                 Buy Now
               </Text>
             </Button>
           </XStack>
 
-          <Separator marginVertical="$2" />
+          <Separator />
 
-          {/* Product Details Tabs */}
+          {/* Product Description */}
+          <YStack gap="$2">
+            <H4>Description</H4>
+            <Paragraph>{product.description}</Paragraph>
+          </YStack>
+
+          <Separator />
+
+          {/* Product Details */}
           <Tabs
             defaultValue="description"
             orientation="horizontal"
@@ -290,9 +252,6 @@ const ProductDetailScreen = () => {
               <Tabs.Tab value="description">
                 <Text>Description</Text>
               </Tabs.Tab>
-              <Tabs.Tab value="features">
-                <Text>Features</Text>
-              </Tabs.Tab>
               <Tabs.Tab value="specifications">
                 <Text>Specifications</Text>
               </Tabs.Tab>
@@ -300,73 +259,49 @@ const ProductDetailScreen = () => {
 
             <Tabs.Content value="description">
               <YStack padding="$2" gap="$2">
-                <Paragraph fontSize="$3" lineHeight="$5">
-                  {product.description}
-                </Paragraph>
-              </YStack>
-            </Tabs.Content>
-
-            <Tabs.Content value="features">
-              <YStack padding="$2" gap="$2">
-                {product.features.map((feature, index) => (
-                  <XStack
-                    key={`feature-${feature}`}
-                    gap="$2"
-                    alignItems="center">
-                    <Icon name="check-circle" size={20} color="#3B82F6" />
-                    <Text fontSize="$3">{feature}</Text>
-                  </XStack>
-                ))}
+                <Paragraph>{product.description}</Paragraph>
               </YStack>
             </Tabs.Content>
 
             <Tabs.Content value="specifications">
               <YStack padding="$2" gap="$2">
-                {product.specifications.map((spec, index) => (
-                  <XStack
-                    key={`spec-${spec.name}`}
-                    justifyContent="space-between"
-                    paddingVertical="$1">
-                    <Text fontSize="$3" color="$gray10">
-                      {spec.name}
-                    </Text>
-                    <Text fontSize="$3">{spec.value}</Text>
-                  </XStack>
-                ))}
+                <Text>Category: {product.category.name}</Text>
+                <Text>Quantity Available: {product.quantity}</Text>
+                <Text>Status: {product.productStatus}</Text>
               </YStack>
             </Tabs.Content>
           </Tabs>
 
-          <Separator marginVertical="$2" />
+          <Separator />
 
           {/* Related Products */}
           <YStack gap="$2">
-            <H4>You May Also Like</H4>
+            <H4>Related Products</H4>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <XStack gap="$3" paddingVertical="$2">
-                {relatedProducts.map(product => (
+                {mockRelatedProducts.map(relatedProduct => (
                   <Card
-                    key={product.id}
+                    key={relatedProduct.id}
                     elevate
                     bordered
                     width={150}
-                    onPress={() =>
+                    onPress={() => {
                       navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {
-                        productId: product.id,
-                      })
-                    }>
+                        productId: relatedProduct.id,
+                      });
+                    }}>
                     <Image
-                      source={{uri: product.image}}
+                      source={{uri: relatedProduct.image}}
                       width="100%"
-                      height={120}
+                      height={100}
                       objectFit="cover"
                     />
                     <YStack padding="$2" gap="$1">
                       <Text fontSize="$2" numberOfLines={1} fontWeight="bold">
-                        {product.name}
+                        {relatedProduct.name}
                       </Text>
                       <Text fontSize="$3" color="$blue10" fontWeight="bold">
-                        ${product.price.toFixed(2)}
+                        ${relatedProduct.price.toFixed(2)}
                       </Text>
                     </YStack>
                   </Card>

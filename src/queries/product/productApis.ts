@@ -5,12 +5,12 @@ import {ProductRequest, ProductUpdateRequest} from './types';
 import {stringify} from 'utils';
 import {GetPropertiesParams} from 'services/helpers';
 
-export default (baseUrl = APP_APIS.PRODUCT) => {
+const apis = (baseUrl = APP_APIS.PRODUCT) => {
   const privateRequest = useHttpPrivateRequest(baseUrl);
   const publicRequest = useHttpPublicRequest(baseUrl);
 
-  const getAllProducts = (params: GetPropertiesParams) => {
-    return privateRequest.get('');
+  const getAllProducts = (params?: GetPropertiesParams) => {
+    return publicRequest.get('', {params});
   };
 
   const createProduct = (productData: ProductRequest) => {
@@ -50,7 +50,6 @@ export default (baseUrl = APP_APIS.PRODUCT) => {
       },
     });
   };
-
   const getSalesProducts = () => {
     return privateRequest.get('/sales');
   };
@@ -58,16 +57,12 @@ export default (baseUrl = APP_APIS.PRODUCT) => {
   const getProductById = (id: string) => {
     return privateRequest.get(`/${id}`);
   };
-
   const getProductBySlug = (slug: string) => {
     return privateRequest.get(`/detail/${slug}`);
   };
 
-  const getProductsByCategory = (
-    categoryName: string,
-    params: GetPropertiesParams,
-  ) => {
-    return privateRequest.get(`/category/${categoryName}`, {params});
+  const getProductsByCategory = (categoryName: string, params?: any) => {
+    return privateRequest.get(`/category/${categoryName}?${stringify(params)}`);
   };
 
   const getProductsByIds = (ids: string[]) => {
@@ -75,10 +70,9 @@ export default (baseUrl = APP_APIS.PRODUCT) => {
       params: {ids: ids.join(',')},
     });
   };
-
   const searchProducts = (query: string) => {
     return privateRequest.get('/search', {
-      params: {query},
+      params: {q: query},
     });
   };
 
@@ -121,3 +115,5 @@ export default (baseUrl = APP_APIS.PRODUCT) => {
     getSalesByCategory,
   };
 };
+
+export default apis;

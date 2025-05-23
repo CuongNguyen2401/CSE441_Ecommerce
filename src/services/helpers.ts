@@ -1,6 +1,9 @@
 type ApiCall = (..._args: any[]) => Promise<any>;
 
-export async function responseWrapper<T>(func: ApiCall, [...args]: any[] = []): Promise<T> {
+export async function responseWrapper<T>(
+  func: ApiCall,
+  [...args]: any[] = [],
+): Promise<T> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (res, rej) => {
     try {

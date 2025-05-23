@@ -8,7 +8,7 @@ import {categories, promotions} from './HomeScreen.helpers';
 
 export function useHomeScreen() {
   const {user} = useAuthStore();
-  const {products, isFetching, isError, error} = useGetAllProducts();
+  const {products, isPending, isError, error} = useGetAllProducts();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
@@ -32,7 +32,7 @@ export function useHomeScreen() {
     state: {
       user,
       products,
-      isFetching,
+      isPending,
       isError,
       error,
       categories,

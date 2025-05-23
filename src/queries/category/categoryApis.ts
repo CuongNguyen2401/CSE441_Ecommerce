@@ -8,7 +8,7 @@ import {
 import {APP_APIS} from 'queries/helpers';
 import {ApiResponseType} from 'services/helpers';
 
-export default (baseUrl = APP_APIS.CATEGORY) => {
+const apis = (baseUrl = APP_APIS.CATEGORY) => {
   const privateRequest = useHttpPrivateRequest(baseUrl);
   const publicRequest = useHttpPublicRequest(baseUrl);
 
@@ -31,7 +31,7 @@ export default (baseUrl = APP_APIS.CATEGORY) => {
   };
 
   const getCategoryById = (id: string) => {
-    return privateRequest.get(`/${id}`);
+    return publicRequest.get(`/${id}`);
   };
 
   const countProductsByCategory = (categoryName: string) => {
@@ -47,3 +47,5 @@ export default (baseUrl = APP_APIS.CATEGORY) => {
     countProductsByCategory,
   };
 };
+
+export default apis;

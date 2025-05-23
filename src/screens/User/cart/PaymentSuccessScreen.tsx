@@ -1,8 +1,9 @@
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {NavigationRoutes} from 'navigation/types';
-import React from 'react';
+import {orderApis} from 'queries/cart';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Button, Card, Circle, H2, Text, YStack} from 'tamagui';
+import {Button, Card, Circle, H2, Text, YStack, Spinner} from 'tamagui';
 
 type PaymentSuccessParams = {
   orderId: number;
@@ -14,7 +15,32 @@ const PaymentSuccessScreen = () => {
     useRoute<RouteProp<Record<string, PaymentSuccessParams>, string>>();
   const {orderId} = route.params as PaymentSuccessParams;
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const formattedOrderId = `#${orderId.toString().padStart(6, '0')}`;
+
+  // In a real application, this would use a proper query hook
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      try {
+        setIsLoading(true);
+        const response = await orderApis.getOrderById(orderId.toString());
+        setOrderDetails(response.data);
+        setError(null);
+      } catch (err: any) {
+        console.error('Failed to fetch order details:', err);
+        setError('Could not load order details');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (orderId) {
+      fetchOrderDetails();
+    }
+  }, [orderId]);
 
   const currentDate = new Date();
   const deliveryDate = new Date(currentDate);
@@ -63,41 +89,89 @@ const PaymentSuccessScreen = () => {
         </Text>
       </YStack>
 
-      <Card bordered width="100%" padding="$4">
-        <YStack gap="$4">
-          <YStack gap="$1">
-            <Text fontSize="$2" color="$gray10">
-              Order ID
-            </Text>
-            <Text fontSize="$4" fontWeight="bold">
-              {formattedOrderId}
-            </Text>
-          </YStack>
+      {isLoading ? (
+        <Card
+          bordered
+          width="100%"
+          padding="$4"
+          alignItems="center"
+          justifyContent="center"
+          height={200}>
+          <Spinner size="large" />
+          <Text fontSize="$3" marginTop="$2">
+            Loading order details...
+          </Text>
+        </Card>
+      ) : error ? (
+        <Card bordered width="100%" padding="$4">
+          <Text color="$red10">{error}</Text>
+        </Card>
+      ) : (
+        <Card bordered width="100%" padding="$4">
+          <YStack gap="$4">
+            <YStack gap="$1">
+              <Text fontSize="$2" color="$gray10">
+                Order ID
+              </Text>
+              <Text fontSize="$4" fontWeight="bold">
+                {formattedOrderId}
+              </Text>
+            </YStack>
 
-          <YStack gap="$1">
-            <Text fontSize="$2" color="$gray10">
-              Estimated Delivery
-            </Text>
-            <Text fontSize="$3">{formattedDeliveryDate}</Text>
-          </YStack>
+            <YStack gap="$1">
+              <Text fontSize="$2" color="$gray10">
+                Estimated Delivery
+              </Text>
+              <Text fontSize="$3">{formattedDeliveryDate}</Text>
+            </YStack>
 
-          <YStack gap="$1">
-            <Text fontSize="$2" color="$gray10">
-              Payment Method
-            </Text>
-            <Text fontSize="$3">Credit Card (•••• 1234)</Text>
-          </YStack>
+            <YStack gap="$1">
+              <Text fontSize="$2" color="$gray10">
+                Payment Method
+              </Text>
+              <Text fontSize="$3">
+                {orderDetails?.paymentMethod || 'Credit Card (•••• 1234)'}
+              </Text>
+            </YStack>
 
-          <YStack gap="$1">
-            <Text fontSize="$2" color="$gray10">
-              Shipping Address
-            </Text>
-            <Text fontSize="$3">John Doe</Text>
-            <Text fontSize="$3">123 Main St, New York, NY 10001</Text>
-            <Text fontSize="$3">United States</Text>
+            <YStack gap="$1">
+              <Text fontSize="$2" color="$gray10">
+                Shipping Address
+              </Text>
+              {orderDetails?.shippingAddress ? (
+                <>
+                  <Text fontSize="$3">{orderDetails.shippingAddress.name}</Text>
+                  <Text fontSize="$3">
+                    {orderDetails.shippingAddress.street}
+                  </Text>
+                  <Text fontSize="$3">
+                    {`${orderDetails.shippingAddress.city}, ${orderDetails.shippingAddress.state} ${orderDetails.shippingAddress.zip}`}
+                  </Text>
+                  <Text fontSize="$3">
+                    {orderDetails.shippingAddress.country}
+                  </Text>
+                </>
+              ) : (
+                <Text fontSize="$3">Address information not available</Text>
+              )}
+            </YStack>
+
+            {orderDetails?.orderItems && (
+              <YStack gap="$1">
+                <Text fontSize="$2" color="$gray10">
+                  Order Items
+                </Text>
+                <Text fontSize="$3">
+                  {orderDetails.orderItems.length} items
+                </Text>
+                <Text fontSize="$3" fontWeight="bold" color="$blue10">
+                  Total: ${orderDetails.total?.toFixed(2) || '0.00'}
+                </Text>
+              </YStack>
+            )}
           </YStack>
-        </YStack>
-      </Card>
+        </Card>
+      )}
 
       <YStack gap="$3" width="100%">
         <Button size="$4" themeInverse onPress={handleViewOrder}>

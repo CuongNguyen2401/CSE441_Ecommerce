@@ -12,90 +12,60 @@ import {
   Separator,
   Input,
   View,
+  Spinner,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationRoutes} from 'navigation/types';
-
-// Mock data for demonstration
-const cartItems = [
-  {
-    id: 1,
-    productId: 1,
-    name: 'Wireless Headphones',
-    price: 149.99,
-    quantity: 1,
-    image: 'https://placekitten.com/200/200',
-    color: 'Black',
-    inStock: true,
-  },
-  {
-    id: 2,
-    productId: 3,
-    name: 'Bluetooth Speaker',
-    price: 79.99,
-    quantity: 2,
-    image: 'https://placekitten.com/201/201',
-    color: 'Blue',
-    inStock: true,
-  },
-  {
-    id: 3,
-    productId: 5,
-    name: 'Smartphone Case',
-    price: 19.99,
-    quantity: 1,
-    image: 'https://placekitten.com/202/202',
-    color: 'Clear',
-    inStock: false,
-  },
-];
+import {useCart} from 'context/CartContext';
+import {useValidateCoupon} from 'queries/cart';
 
 const CartScreen = () => {
   const navigation = useNavigation();
-  const [items, setItems] = useState(cartItems);
+  const {
+    state: {
+      items,
+      subtotal,
+      shippingCost,
+      tax,
+      promoDiscount,
+      total,
+      promoCode: appliedPromoCode,
+    },
+    removeItem,
+    updateItemQuantity,
+    applyPromo,
+    removePromo,
+  } = useCart();
+
   const [promoCode, setPromoCode] = useState('');
-  const [promoApplied, setPromoApplied] = useState(false);
-  const [promoDiscount, setPromoDiscount] = useState(0);
-
-  // Calculate subtotal
-  const subtotal = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
-
-  // Shipping cost (free over $100)
-  const shippingCost = subtotal > 100 ? 0 : 9.99;
-
-  // Tax (8.5%)
-  const tax = subtotal * 0.085;
-
-  // Total
-  const total = subtotal + shippingCost + tax - promoDiscount;
+  const {
+    validateCoupon,
+    isValidating,
+    error: couponError,
+    validCoupon,
+    clearError,
+  } = useValidateCoupon();
 
   const handleQuantityChange = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-
-    setItems(
-      items.map(item =>
-        item.id === id ? {...item, quantity: newQuantity} : item,
-      ),
-    );
+    updateItemQuantity(id, newQuantity);
   };
 
   const handleRemoveItem = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
+    removeItem(id);
   };
 
   const handleApplyPromo = () => {
-    // In a real app, you would validate the promo code with an API
-    if (promoCode.toLowerCase() === 'discount20') {
-      setPromoApplied(true);
-      setPromoDiscount(subtotal * 0.2); // 20% discount
-    } else {
-      setPromoApplied(false);
-      setPromoDiscount(0);
-    }
+    clearError();
+    validateCoupon(promoCode);
   };
+
+  // Apply the coupon after validation
+  React.useEffect(() => {
+    if (validCoupon) {
+      applyPromo(validCoupon.code, subtotal * validCoupon.discount);
+    }
+  }, [validCoupon, subtotal, applyPromo]);
 
   const handleCheckout = () => {
     navigation.navigate(NavigationRoutes.CHECKOUT);
@@ -107,6 +77,7 @@ const CartScreen = () => {
       params: {screen: NavigationRoutes.HOME},
     });
   };
+
   return (
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
@@ -145,11 +116,13 @@ const CartScreen = () => {
                         <Text fontSize="$3" fontWeight="bold" numberOfLines={1}>
                           {item.name}
                         </Text>
-                        <Text fontSize="$2" color="$gray10">
-                          Color: {item.color}
-                        </Text>
+                        {item.color && (
+                          <Text fontSize="$2" color="$gray10">
+                            Color: {item.color}
+                          </Text>
+                        )}
                         <Text fontSize="$4" color="$blue10" fontWeight="bold">
-                          ${item.price.toFixed(2)}
+                          ${(item.salePrice || item.price).toFixed(2)}
                         </Text>
 
                         {!item.inStock && (
@@ -209,13 +182,31 @@ const CartScreen = () => {
                       value={promoCode}
                       onChangeText={setPromoCode}
                     />
-                    <Button onPress={handleApplyPromo}>Apply</Button>
+                    <Button
+                      onPress={handleApplyPromo}
+                      disabled={isValidating || !promoCode.trim()}>
+                      {isValidating ? <Spinner size="small" /> : 'Apply'}
+                    </Button>
                   </XStack>
 
-                  {promoApplied && (
-                    <Text fontSize="$2" color="$green10">
-                      Promo code applied! 20% discount.
+                  {couponError && (
+                    <Text fontSize="$2" color="$red10">
+                      {couponError}
                     </Text>
+                  )}
+
+                  {appliedPromoCode && (
+                    <XStack gap="$2" alignItems="center">
+                      <Text fontSize="$2" color="$green10">
+                        Promo code '{appliedPromoCode}' applied!
+                      </Text>
+                      <Button
+                        size="$1"
+                        variant="outlined"
+                        onPress={removePromo}>
+                        <Icon name="close" size={14} />
+                      </Button>
+                    </XStack>
                   )}
                 </YStack>
               </Card>
@@ -281,7 +272,8 @@ const CartScreen = () => {
                 size="$4"
                 themeInverse
                 onPress={handleCheckout}
-                marginTop="$2">
+                marginTop="$2"
+                disabled={items.length === 0}>
                 Proceed to Checkout
               </Button>
 

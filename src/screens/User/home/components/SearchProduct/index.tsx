@@ -1,10 +1,23 @@
+import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Input, XStack} from 'tamagui';
+import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 const SearchProduct = () => {
+  const [searchText, setSearchText] = useState('');
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+
   const handleSearch = (text: string) => {
-    console.log('Search text:', text);
-    // Implement your search logic here
+    if (text.trim().length > 0) {
+      // Navigate to products screen with search query
+      navigation.navigate(NavigationRoutes.CATEGORY_PRODUCTS, {
+        category: 'Search Results',
+        searchQuery: text,
+      });
+    }
   };
 
   return (
@@ -20,7 +33,9 @@ const SearchProduct = () => {
         placeholder="Search products..."
         borderWidth={0}
         backgroundColor="transparent"
-        onSubmitEditing={e => handleSearch(e.nativeEvent.text)}
+        value={searchText}
+        onChangeText={setSearchText}
+        onSubmitEditing={() => handleSearch(searchText)}
       />
     </XStack>
   );

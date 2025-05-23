@@ -191,7 +191,7 @@ const ProductScreen = () => {
               <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Group>
-                  {categories.map((category, index) => (
+                  {categories?.map((category, index) => (
                     <Select.Item
                       key={category.id}
                       value={category.name}

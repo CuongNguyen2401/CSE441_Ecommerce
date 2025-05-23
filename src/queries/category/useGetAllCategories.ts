@@ -1,9 +1,5 @@
 import {useQuery, useQueryClient, UseQueryOptions} from 'react-query';
-import {
-  ApiResponseType,
-  PaginationResponseType,
-  responseWrapper,
-} from 'services/helpers';
+import {ApiResponseType, responseWrapper} from 'services/helpers';
 import {CategoryResponse} from './types';
 import {CATEGORY_KEYS} from './keys';
 import {categoryApis} from '.';
@@ -22,10 +18,10 @@ export const useGetAllCategories = (
     refetch: onGetAllCategories,
   } = useQuery<ApiResponseType<CategoryResponse[]>, Error>(
     [CATEGORY_KEYS.GET_CATEGORIES],
-    async ({queryKey}) => {
+    ({queryKey}) => {
       const [, ...params] = queryKey; // Destructure the queryKey to get the params
       return responseWrapper<ApiResponseType<CategoryResponse[]>>(
-        await categoryApis.getCategories,
+        categoryApis.getCategories,
       );
     },
     {

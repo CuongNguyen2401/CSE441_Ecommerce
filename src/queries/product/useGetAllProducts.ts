@@ -28,10 +28,10 @@ export const useGetAllProducts = (
     refetch: onGetAllProduct,
   } = useQuery<ApiResponseType<ProductResponse[]>, Error>(
     [PRODUCT_KEYS.GET_ALL_PRODUCTS, {...params}],
-    async ({queryKey}) => {
+    ({queryKey}) => {
       const [, ...params] = queryKey; // Destructure the queryKey to get the params
       return responseWrapper<ApiResponseType<ProductResponse[]>>(
-        await productApis.getAllProducts,
+        productApis.getAllProducts,
       );
     },
     {

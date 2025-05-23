@@ -72,7 +72,10 @@ export type MainTabParamList = {
 export type HomeStackParamList = {
   [NavigationRoutes.HOME]: undefined;
   [NavigationRoutes.PRODUCT_DETAILS]: {productId: number};
-  [NavigationRoutes.CATEGORY_PRODUCTS]: {category: string};
+  [NavigationRoutes.CATEGORY_PRODUCTS]: {
+    category: string;
+    searchQuery?: string;
+  };
   [NavigationRoutes.SEARCH]: {query?: string};
 };
 
@@ -80,7 +83,10 @@ export type HomeStackParamList = {
 export type ProductsStackParamList = {
   [NavigationRoutes.PRODUCTS]: undefined;
   [NavigationRoutes.PRODUCT_DETAILS]: {productId: number};
-  [NavigationRoutes.CATEGORY_PRODUCTS]: {category: string};
+  [NavigationRoutes.CATEGORY_PRODUCTS]: {
+    category: string;
+    searchQuery?: string;
+  };
   [NavigationRoutes.SEARCH]: {query?: string};
 };
 

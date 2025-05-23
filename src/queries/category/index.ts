@@ -1,7 +1,6 @@
+import apis from './categoryApis';
+
 export * from './keys';
 export * from './types';
-export * from './categoryApis';
 
-export const categoryApis = {
-  ...require('./categoryApis').default(),
-};
+export const categoryApis = apis();

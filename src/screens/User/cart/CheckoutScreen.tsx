@@ -16,28 +16,21 @@ import {
   Checkbox,
   Form,
   View,
+  Spinner,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationRoutes} from 'navigation/types';
+import {useCart} from 'context/CartContext';
+import {useCreateOrder, useProcessPayment} from 'queries/cart';
+import {
+  CardDetails,
+  OrderItemRequest,
+  OrderRequest,
+  ShippingAddress,
+} from 'queries/cart/types';
+import {Alert} from 'react-native';
 
-// Mock data for demonstration
-const cartItems = [
-  {
-    id: 1,
-    name: 'Wireless Headphones',
-    price: 149.99,
-    quantity: 1,
-    image: 'https://placekitten.com/200/200',
-  },
-  {
-    id: 2,
-    name: 'Bluetooth Speaker',
-    price: 79.99,
-    quantity: 2,
-    image: 'https://placekitten.com/201/201',
-  },
-];
-
+// Mock addresses for demonstration until user profile integration
 const addresses = [
   {
     id: 1,
@@ -60,6 +53,19 @@ const paymentMethods = [
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
+  const {
+    state: {
+      items,
+      subtotal,
+      shippingCost,
+      tax,
+      promoDiscount,
+      total,
+      promoCode,
+    },
+    clearCart,
+  } = useCart();
+
   const [selectedAddress, setSelectedAddress] = useState(
     addresses[0]?.id.toString(),
   );
@@ -69,34 +75,115 @@ const CheckoutScreen = () => {
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
   const [saveCard, setSaveCard] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  // Calculate order summary
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
-  const shippingCost = subtotal > 100 ? 0 : 9.99;
-  const tax = subtotal * 0.085;
-  const total = subtotal + shippingCost + tax;
-
-  const handlePlaceOrder = () => {
-    setIsProcessing(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsProcessing(false);
-      navigation.navigate(NavigationRoutes.PAYMENT_SUCCESS, {
-        orderId: Math.floor(Math.random() * 1000000),
-      });
-    }, 2000);
-  };
+  const {createOrder, isCreating, orderData} = useCreateOrder();
+  const {processPayment, isProcessing, paymentData} = useProcessPayment();
 
   const handleAddAddress = () => {
     navigation.navigate(NavigationRoutes.MAIN, {
       screen: NavigationRoutes.PROFILE_TAB,
       params: {screen: NavigationRoutes.ADD_ADDRESS},
     });
+  };
+
+  const prepareOrderData = (): OrderRequest => {
+    const selectedAddressObj = addresses.find(
+      addr => addr.id.toString() === selectedAddress,
+    );
+
+    if (!selectedAddressObj) {
+      throw new Error('No shipping address selected');
+    }
+
+    const shippingAddress: ShippingAddress = {
+      name: selectedAddressObj.name,
+      street: selectedAddressObj.street,
+      city: selectedAddressObj.city,
+      state: selectedAddressObj.state,
+      zip: selectedAddressObj.zip,
+      country: selectedAddressObj.country,
+      phone: selectedAddressObj.phone,
+      isDefault: selectedAddressObj.isDefault,
+    };
+
+    const orderItems: OrderItemRequest[] = items.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.salePrice || item.price,
+    }));
+
+    let cardDetails: CardDetails | undefined;
+
+    if (paymentMethod === 'credit') {
+      cardDetails = {
+        cardNumber,
+        cardName,
+        expiryDate: cardExpiry,
+        cvv: cardCvv,
+        saveCard,
+      };
+    }
+
+    return {
+      orderItems,
+      couponCode: promoCode,
+      shippingAddress,
+      paymentMethod,
+      cardDetails,
+    };
+  };
+
+  const handlePlaceOrder = () => {
+    try {
+      // Validate inputs
+      if (paymentMethod === 'credit') {
+        if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
+          Alert.alert('Validation Error', 'Please fill in all card details');
+          return;
+        }
+      }
+
+      if (items.length === 0) {
+        Alert.alert('Cart Empty', 'Your cart is empty');
+        return;
+      }
+
+      const orderData = prepareOrderData();
+
+      // First create the order
+      createOrder(orderData, {
+        onSuccess: response => {
+          const createdOrder = response.data;
+
+          // Then process the payment
+          processPayment(orderData, {
+            onSuccess: paymentResponse => {
+              // Clear the cart after successful order creation and payment
+              clearCart();
+
+              // Navigate to success screen
+              navigation.navigate(NavigationRoutes.PAYMENT_SUCCESS, {
+                orderId: createdOrder.id,
+              });
+            },
+            onError: err => {
+              Alert.alert(
+                'Payment Failed',
+                err.response?.data?.message || 'Failed to process payment',
+              );
+            },
+          });
+        },
+        onError: err => {
+          Alert.alert(
+            'Order Failed',
+            err.response?.data?.message || 'Failed to create order',
+          );
+        },
+      });
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'An error occurred');
+    }
   };
 
   return (
@@ -112,7 +199,7 @@ const CheckoutScreen = () => {
             </Text>
 
             <YStack gap="$2">
-              {cartItems.map(item => (
+              {items.map(item => (
                 <XStack key={item.id} gap="$3">
                   <Image
                     source={{uri: item.image}}
@@ -130,7 +217,10 @@ const CheckoutScreen = () => {
                     </Text>
                   </YStack>
                   <Text fontSize="$3" fontWeight="bold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    $
+                    {((item.salePrice || item.price) * item.quantity).toFixed(
+                      2,
+                    )}
                   </Text>
                 </XStack>
               ))}
@@ -160,6 +250,17 @@ const CheckoutScreen = () => {
               </Text>
               <Text fontSize="$3">${tax.toFixed(2)}</Text>
             </XStack>
+
+            {promoDiscount > 0 && (
+              <XStack justifyContent="space-between">
+                <Text fontSize="$3" color="$green10">
+                  Discount
+                </Text>
+                <Text fontSize="$3" color="$green10">
+                  -${promoDiscount.toFixed(2)}
+                </Text>
+              </XStack>
+            )}
 
             <Separator marginVertical="$1" />
 
@@ -192,7 +293,9 @@ const CheckoutScreen = () => {
                 No addresses saved
               </Text>
             ) : (
-              <RadioGroup value={selectedAddress}>
+              <RadioGroup
+                value={selectedAddress}
+                onValueChange={setSelectedAddress}>
                 <YStack gap="$2">
                   {addresses.map(address => (
                     <XStack key={address.id} gap="$2" alignItems="flex-start">
@@ -327,8 +430,17 @@ const CheckoutScreen = () => {
           size="$4"
           themeInverse
           onPress={handlePlaceOrder}
-          disabled={isProcessing}>
-          {isProcessing ? 'Processing...' : 'Place Order'}
+          disabled={isCreating || isProcessing || items.length === 0}>
+          {isCreating || isProcessing ? (
+            <XStack gap="$2" alignItems="center">
+              <Spinner size="small" color="$color" />
+              <Text>
+                {isCreating ? 'Creating Order...' : 'Processing Payment...'}
+              </Text>
+            </XStack>
+          ) : (
+            'Place Order'
+          )}
         </Button>
       </YStack>
     </ScrollView>

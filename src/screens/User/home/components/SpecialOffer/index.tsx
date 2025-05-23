@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, H4, Image, ScrollView, Text, XStack, YStack } from 'tamagui';
-import { useHomeScreen } from '../../useHomeScreen';
+import {Card, H4, Image, ScrollView, Text, XStack, YStack} from 'tamagui';
+import {useHomeScreen} from '../../useHomeScreen';
 
 export const SpecialOffer = () => {
   const {

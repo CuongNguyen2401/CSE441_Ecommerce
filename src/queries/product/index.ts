@@ -1,7 +1,6 @@
+import apis from './productApis';
+
 export * from './keys';
 export * from './types';
-export * from './productApis';
 
-export const productApis = {
-  ...require('./productApis').default(),
-};
+export const productApis = apis();

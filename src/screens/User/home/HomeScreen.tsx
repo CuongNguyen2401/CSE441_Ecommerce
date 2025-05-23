@@ -3,7 +3,7 @@ import {ScrollView, Separator, YStack} from 'tamagui';
 import {SearchProduct} from './components';
 import {SpecialOffer} from './components/SpecialOffer';
 import {Categories} from './components/ShopByCategory';
-import {FeaturedProducts} from './components/FeatureProduct';
+import {FeaturedProducts} from './components/MostSoldProduct';
 
 const HomeScreen = () => {
   return (

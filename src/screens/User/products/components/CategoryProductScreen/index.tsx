@@ -1,10 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useMemo} from 'react';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
-type CategoryRouteParams = {
-  CategoryProducts: {
-    category?: string;
-  };
-};
+import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   YStack,
   XStack,
@@ -20,95 +17,8 @@ import {
   View,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {NavigationRoutes} from 'navigation/types';
-
-// Mock data for demonstration
-const allProducts = [
-  {
-    id: 1,
-    name: 'Wireless Headphones',
-    price: 99.99,
-    image: 'https://placekitten.com/200/200',
-    category: 'Electronics',
-  },
-  {
-    id: 2,
-    name: 'Smart Watch',
-    price: 199.99,
-    image: 'https://placekitten.com/201/201',
-    category: 'Electronics',
-  },
-  {
-    id: 3,
-    name: 'Bluetooth Speaker',
-    price: 79.99,
-    image: 'https://placekitten.com/202/202',
-    category: 'Electronics',
-  },
-  {
-    id: 4,
-    name: 'Laptop Backpack',
-    price: 49.99,
-    image: 'https://placekitten.com/203/203',
-    category: 'Accessories',
-  },
-  {
-    id: 5,
-    name: 'Smartphone',
-    price: 699.99,
-    image: 'https://placekitten.com/204/204',
-    category: 'Electronics',
-  },
-  {
-    id: 6,
-    name: 'Wireless Charger',
-    price: 29.99,
-    image: 'https://placekitten.com/205/205',
-    category: 'Electronics',
-  },
-  {
-    id: 7,
-    name: 'Fitness Tracker',
-    price: 89.99,
-    image: 'https://placekitten.com/206/206',
-    category: 'Electronics',
-  },
-  {
-    id: 8,
-    name: 'Portable Power Bank',
-    price: 39.99,
-    image: 'https://placekitten.com/207/207',
-    category: 'Electronics',
-  },
-  {
-    id: 9,
-    name: 'T-Shirt',
-    price: 19.99,
-    image: 'https://placekitten.com/208/208',
-    category: 'Clothing',
-  },
-  {
-    id: 10,
-    name: 'Jeans',
-    price: 49.99,
-    image: 'https://placekitten.com/209/209',
-    category: 'Clothing',
-  },
-  {
-    id: 11,
-    name: 'Sneakers',
-    price: 79.99,
-    image: 'https://placekitten.com/210/210',
-    category: 'Clothing',
-  },
-  {
-    id: 12,
-    name: 'Coffee Mug',
-    price: 14.99,
-    image: 'https://placekitten.com/211/211',
-    category: 'Home & Kitchen',
-  },
-];
+import {ProductResponse} from 'queries/product';
+import {useGetProductsByCategory} from 'queries/product/useGetProductsByCategory';
 
 const sortOptions = [
   {id: 1, name: 'Newest'},
@@ -118,68 +28,45 @@ const sortOptions = [
 ];
 
 const CategoryProductScreen = () => {
-  const navigation = useNavigation();
-  const route = useRoute<RouteProp<CategoryRouteParams, 'CategoryProducts'>>();
-  const {category} = route.params || {category: 'Electronics'};
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  const route =
+    useRoute<
+      RouteProp<HomeStackParamList, NavigationRoutes.CATEGORY_PRODUCTS>
+    >();
+  const {category, searchQuery: initialSearchQuery} = route.params || {
+    category: 'All',
+    searchQuery: '',
+  };
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery || '');
   const [selectedSort, setSelectedSort] = useState('Newest');
-  const [products, setProducts] = useState<
-    Array<{
-      id: number;
-      name: string;
-      price: number;
-      image: string;
-      category: string;
-    }>
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Filter products by category and search query
-  useEffect(() => {
-    setIsLoading(true);
+  // Fetch products using a single query
+  const {categoryProducts, isPending} = useGetProductsByCategory({
+    categoryName: category,
+  });
 
-    // Simulate API call
-    setTimeout(() => {
-      let filtered = allProducts.filter(
-        product => product.category === category,
-      );
+  // Sort products using useMemo to avoid unnecessary recalculations
+  const sortedProducts = useMemo(() => {
+    let sorted = [...(categoryProducts || [])];
+    if (selectedSort === 'Price: Low to High') {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (selectedSort === 'Price: High to Low') {
+      sorted.sort((a, b) => b.price - a.price);
+    }
+    return sorted;
+  }, [categoryProducts, selectedSort]);
 
-      if (searchQuery) {
-        filtered = filtered.filter(product =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()),
-        );
-      }
-
-      // Sort products
-      if (selectedSort === 'Price: Low to High') {
-        filtered.sort((a, b) => a.price - b.price);
-      } else if (selectedSort === 'Price: High to Low') {
-        filtered.sort((a, b) => b.price - a.price);
-      }
-
-      setProducts(filtered);
-      setIsLoading(false);
-    }, 500);
-  }, [category, searchQuery, selectedSort]);
-
-  const handleSearch = (query: React.SetStateAction<string>) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const handleProductPress = (product: {
-    id: any;
-    name?: string;
-    price?: number;
-    image?: string;
-    category?: string;
-  }) => {
-    navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {
-      productId: product.id,
-    });
+  const handleProductPress = (productId: number) => {
+    navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {productId});
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <YStack flex={1} justifyContent="center" alignItems="center">
         <Spinner size="large" color="$blue10" />
@@ -217,7 +104,6 @@ const CategoryProductScreen = () => {
             variant="outlined"
             iconAfter={<Icon name="sort" size={16} />}
             onPress={() => {
-              // In a real app, you would show a dropdown or modal
               const nextSortIndex =
                 (sortOptions.findIndex(opt => opt.name === selectedSort) + 1) %
                 sortOptions.length;
@@ -231,7 +117,7 @@ const CategoryProductScreen = () => {
 
         {/* Product Grid */}
         <ScrollView showsVerticalScrollIndicator={false}>
-          {products.length === 0 ? (
+          {sortedProducts.length === 0 ? (
             <YStack height={300} justifyContent="center" alignItems="center">
               <Icon name="search-off" size={48} color="#ccc" />
               <Text fontSize="$4" color="$gray10" marginTop="$2">
@@ -240,14 +126,14 @@ const CategoryProductScreen = () => {
             </YStack>
           ) : (
             <XStack flexWrap="wrap" justifyContent="space-between">
-              {products.map(product => (
+              {sortedProducts.map(product => (
                 <Card
                   key={product.id}
                   elevate
                   bordered
                   width="48%"
                   marginBottom="$3"
-                  onPress={() => handleProductPress(product)}>
+                  onPress={() => handleProductPress(product.id)}>
                   <Image
                     source={{uri: product.image}}
                     width="100%"
@@ -259,7 +145,7 @@ const CategoryProductScreen = () => {
                       {product.name}
                     </Text>
                     <Text fontSize="$2" color="$gray10" numberOfLines={1}>
-                      {product.category}
+                      {product.category.name}
                     </Text>
                     <Text fontSize="$4" color="$blue10" fontWeight="bold">
                       ${product.price.toFixed(2)}
