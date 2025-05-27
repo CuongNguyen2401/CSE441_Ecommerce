@@ -26,6 +26,11 @@ export interface ProductResponse {
   relatedProducts: string[];
 }
 
+export interface SaleProductResponse {
+  product: ProductResponse;
+  totalQuantitySold: number;
+}
+
 export interface ProductRequest {
   name: string;
   description?: string;

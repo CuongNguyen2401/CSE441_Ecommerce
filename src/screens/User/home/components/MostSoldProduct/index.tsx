@@ -1,13 +1,15 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
+import {useGetMostSoldProducts} from 'queries/product/useGetMostSoldProducts';
 import React from 'react';
 import {Button, Card, H4, Image, Spinner, Text, XStack, YStack} from 'tamagui';
-import {useHomeScreen} from '../../useHomeScreen';
-import {useNavigation} from '@react-navigation/native';
-import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useGetMostSoldProducts} from 'queries/product/useGetMostSoldProducts';
 
 export const FeaturedProducts = () => {
-  const {mostSoldProducts, isPending} = useGetMostSoldProducts({enabled: true});
+  const {data: mostSoldProducts, isPending} = useGetMostSoldProducts({
+    enabled: true,
+  });
+
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
@@ -34,7 +36,7 @@ export const FeaturedProducts = () => {
   }
 
   // Handle empty state
-  if (!mostSoldProducts || mostSoldProducts.length === 0) {
+  if (!mostSoldProducts ) {
     return (
       <YStack height={200} justifyContent="center" alignItems="center">
         <Text color="$gray10">No featured products available</Text>
@@ -54,29 +56,29 @@ export const FeaturedProducts = () => {
         </Button>
       </XStack>
       <XStack flexWrap="wrap" justifyContent="space-between">
-        {mostSoldProducts.map(product => (
+        {mostSoldProducts.map(item => (
           <Card
-            key={product.id}
+            key={item.product.id + item.product.modifiedDate}
             elevate
             bordered
             width="48%"
             marginBottom="$3"
-            onPress={() => handleProductPress(product.id)}>
+            onPress={() => handleProductPress(item.product.id)}>
             <Image
-              source={{uri: product.image}}
+              source={{uri: item.product.image}}
               width="100%"
               height={150}
               objectFit="cover"
             />
             <YStack padding="$2" gap="$1">
               <Text fontSize="$3" numberOfLines={1} fontWeight="bold">
-                {product.name}
+                {item.product?.name}
               </Text>
               <Text fontSize="$2" color="$gray10" numberOfLines={1}>
-                {product.category.name}
+                {item.product?.category?.name}
               </Text>
               <Text fontSize="$4" color="$blue10" fontWeight="bold">
-                ${product.price.toFixed(2)}
+                ${item.product?.price?.toFixed(2)}
               </Text>
             </YStack>
           </Card>

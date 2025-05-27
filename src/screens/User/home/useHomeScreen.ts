@@ -1,10 +1,10 @@
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useAuthStore} from '../../../store/auth/useAuthStore';
-import {useGetAllProducts} from 'services/Product/useGetAllProducts';
-import {HomeStackParamList, NavigationRoutes} from '../../../navigation/types';
-import {Category, Product} from '../products/helpers';
-import {categories, promotions} from './HomeScreen.helpers';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useGetAllProducts } from 'services/Product/useGetAllProducts';
+import { HomeStackParamList } from '../../../navigation/types';
+import { useAuthStore } from '../../../store/auth/useAuthStore';
+import { Category } from '../products/helpers';
+import { categories, promotions } from './HomeScreen.helpers';
 
 export function useHomeScreen() {
   const {user} = useAuthStore();

@@ -19,65 +19,7 @@ import {
   YStack,
 } from 'tamagui';
 
-// Mock data for demonstration
-// const products = [
-//   {
-//     id: 1,
-//     name: 'Wireless Headphones',
-//     price: 99.99,
-//     image: 'https://placekitten.com/200/200',
-//     category: 'Electronics',
-//   },
-//   {
-//     id: 2,
-//     name: 'Smart Watch',
-//     price: 199.99,
-//     image: 'https://placekitten.com/201/201',
-//     category: 'Electronics',
-//   },
-//   {
-//     id: 3,
-//     name: 'Bluetooth Speaker',
-//     price: 79.99,
-//     image: 'https://placekitten.com/202/202',
-//     category: 'Electronics',
-//   },
-//   {
-//     id: 4,
-//     name: 'Laptop Backpack',
-//     price: 49.99,
-//     image: 'https://placekitten.com/203/203',
-//     category: 'Accessories',
-//   },
-//   {
-//     id: 5,
-//     name: 'Smartphone',
-//     price: 699.99,
-//     image: 'https://placekitten.com/204/204',
-//     category: 'Electronics',
-//   },
-//   {
-//     id: 6,
-//     name: 'Wireless Charger',
-//     price: 29.99,
-//     image: 'https://placekitten.com/205/205',
-//     category: 'Electronics',
-//   },
-//   {
-//     id: 7,
-//     name: 'Fitness Tracker',
-//     price: 89.99,
-//     image: 'https://placekitten.com/206/206',
-//     category: 'Electronics',
-//   },
-//   {
-//     id: 8,
-//     name: 'Portable Power Bank',
-//     price: 39.99,
-//     image: 'https://placekitten.com/207/207',
-//     category: 'Electronics',
-//   },
-// ];
+
 
 const sortOptions = [
   {id: 1, name: 'Newest'},
@@ -105,8 +47,7 @@ const ProductScreen = () => {
     }
   }, [products]);
 
-  console.log('Categories:', categories);
-  console.log('Products:', products);
+
 
   const handleSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
