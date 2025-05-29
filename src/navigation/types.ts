@@ -27,7 +27,7 @@ export enum NavigationRoutes {
   SEARCH = 'Search',
 
   // Products Stack Routes
-  PRODUCTS = 'Products',
+  PRODUCTS = 'ProductScreen',
 
   // Orders Stack Routes
   ORDERS = 'Orders',
@@ -77,6 +77,7 @@ export type HomeStackParamList = {
     searchQuery?: string;
   };
   [NavigationRoutes.SEARCH]: {query?: string};
+  [NavigationRoutes.PRODUCTS]: undefined;
 };
 
 // Products Stack

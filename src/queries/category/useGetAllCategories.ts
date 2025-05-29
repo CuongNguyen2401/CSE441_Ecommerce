@@ -5,9 +5,7 @@ import {CATEGORY_KEYS} from './keys';
 import {categoryApis} from '.';
 
 export const useGetAllCategories = (
-  options?: UseQueryOptions<ApiResponseType<CategoryResponse[]>, Error> & {
-    enabled?: boolean;
-  },
+  options?: UseQueryOptions<ApiResponseType<CategoryResponse[]>, Error> & {},
 ) => {
   const {
     data,
@@ -27,7 +25,7 @@ export const useGetAllCategories = (
     {
       notifyOnChangeProps: ['data', 'isFetching'],
       keepPreviousData: true,
-      enabled: options?.enabled,
+      enabled: true,
       ...options,
     },
   );

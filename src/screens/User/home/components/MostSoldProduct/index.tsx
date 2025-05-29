@@ -21,9 +21,7 @@ export const FeaturedProducts = () => {
 
   const handleSeeAll = () => {
     // Navigate to the Products tab
-    navigation.navigate(NavigationRoutes.CATEGORY_PRODUCTS, {
-      category: 'All',
-    });
+    navigation.navigate(NavigationRoutes.PRODUCTS);
   };
 
   // Handle loading state
@@ -36,7 +34,7 @@ export const FeaturedProducts = () => {
   }
 
   // Handle empty state
-  if (!mostSoldProducts ) {
+  if (!mostSoldProducts) {
     return (
       <YStack height={200} justifyContent="center" alignItems="center">
         <Text color="$gray10">No featured products available</Text>
@@ -59,11 +57,15 @@ export const FeaturedProducts = () => {
         {mostSoldProducts.map(item => (
           <Card
             key={item.product.id + item.product.modifiedDate}
-            elevate
             bordered
             width="48%"
             marginBottom="$3"
-            onPress={() => handleProductPress(item.product.id)}>
+            onPress={() => handleProductPress(item.product.id)}
+            style={{
+              elevation: 4, // Android shadow
+              backgroundColor: 'white',
+              boxShadow: 'none',
+            }}>
             <Image
               source={{uri: item.product.image}}
               width="100%"

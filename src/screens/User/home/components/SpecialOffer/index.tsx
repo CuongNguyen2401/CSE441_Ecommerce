@@ -8,29 +8,42 @@ export const SpecialOffer = () => {
   } = useHomeScreen();
 
   return (
-    <YStack>
+    <YStack paddingHorizontal="$3">
       <H4 marginBottom="$2">Special Offers</H4>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{paddingRight: 16}} // Ensure right spacing
+      >
         <XStack gap="$3" paddingVertical="$2">
           {promotions.map(promo => (
             <Card
               key={promo.id}
               elevate
               bordered
+              borderRadius="$6"
+              overflow="hidden"
               width={300}
               height={150}
-              scale={0.9}
-              hoverStyle={{scale: 0.925}}
-              pressStyle={{scale: 0.875}}>
-              <Card.Background>
-                <Image
-                  source={{uri: promo.image}}
-                  width="100%"
-                  height="100%"
-                  objectFit="cover"
-                />
-              </Card.Background>
-              <Card.Footer padded>
+              marginLeft={6}
+              backgroundColor="$background"
+              style={{
+                shadowColor: '#000', // Optional for custom shadow
+                shadowOffset: {width: 0, height: 4},
+                shadowOpacity: 0.3,
+                shadowRadius: 6,
+                elevation: 5, // For Android
+              }}>
+              <Image
+                source={{uri: promo.image}}
+                width="100%"
+                height="100%"
+                resizeMode="cover"
+                position="absolute"
+              />
+
+              <Card.Footer padded backgroundColor="rgba(0,0,0,0.4)">
                 <YStack>
                   <Text color="white" fontSize="$5" fontWeight="bold">
                     {promo.title}

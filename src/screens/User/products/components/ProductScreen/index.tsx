@@ -3,7 +3,7 @@ import {NavigationRoutes} from 'navigation/types';
 import {useGetAllCategories} from 'queries/category/useGetAllCategories';
 import {ProductResponse} from 'queries/product';
 import {useGetAllProducts} from 'queries/product/useGetAllProducts';
-import React, {useEffect, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   Adapt,
@@ -19,64 +19,66 @@ import {
   YStack,
 } from 'tamagui';
 
-
-
 const sortOptions = [
   {id: 1, name: 'Newest'},
   {id: 2, name: 'Price: Low to High'},
   {id: 3, name: 'Price: High to Low'},
-  {id: 4, name: 'Popularity'},
 ];
 
 const ProductScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedSort, setSelectedSort] = useState('Newest');
-  const {products, isError, isPending, error} = useGetAllProducts({
-    enabled: true,
-  });
-  const [filteredProducts, setFilteredProducts] = useState<ProductResponse[]>(
-    products || [],
-  );
-  const {categories} = useGetAllCategories({enabled: true});
 
-  useEffect(() => {
-    if (products) {
-      setFilteredProducts(products);
-    }
-  }, [products]);
+  const {products} = useGetAllProducts({enabled: true});
+  const {categories} = useGetAllCategories();
 
+  const categoriesWithAll = useMemo(() => {
+    if (!categories) return [];
+    return [
+      {id: -1, name: 'All', description: 'Get all products'},
+      ...categories,
+    ];
+  }, [categories]);
 
+  // Filtering and sorting logic
+  const filteredProducts: ProductResponse[] = useMemo(() => {
+    if (!products) return [];
 
-  const handleSearch = (query: React.SetStateAction<string>) => {
-    setSearchQuery(query);
-    filterProducts(query, selectedCategory);
-  };
+    let result = [...products];
 
-  const handleCategoryChange = (category: React.SetStateAction<string>) => {
-    setSelectedCategory(category);
-    filterProducts(searchQuery, category);
-  };
-
-  const filterProducts = (
-    query: React.SetStateAction<string>,
-    category: React.SetStateAction<string>,
-  ) => {
-    let filtered = products;
-
-    if (query) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(query.toString().toLowerCase()),
+    if (searchQuery) {
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
-    if (category && category !== 'All Categories') {
-      filtered = filtered.filter(product => product.category.name === category);
+    if (selectedCategory && selectedCategory !== 'All') {
+      result = result.filter(
+        product => product.category.name === selectedCategory,
+      );
     }
 
-    setFilteredProducts(filtered);
-  };
+    switch (selectedSort) {
+      case 'Price: Low to High':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'Price: High to Low':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'Newest':
+      default:
+        result.sort(
+          (a, b) =>
+            new Date(b.createdDate).getTime() -
+            new Date(a.createdDate).getTime(),
+        );
+        break;
+    }
+
+    return result;
+  }, [products, searchQuery, selectedCategory, selectedSort]);
 
   const handleProductPress = (product: ProductResponse) => {
     navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {
@@ -101,7 +103,7 @@ const ProductScreen = () => {
             borderWidth={0}
             backgroundColor="transparent"
             value={searchQuery}
-            onChangeText={handleSearch}
+            onChangeText={setSearchQuery}
           />
         </XStack>
 
@@ -109,7 +111,7 @@ const ProductScreen = () => {
         <XStack justifyContent="space-between" alignItems="center">
           <Select
             value={selectedCategory}
-            onValueChange={handleCategoryChange}
+            onValueChange={setSelectedCategory}
             disablePreventBodyScroll>
             <Select.Trigger
               width={180}
@@ -132,7 +134,7 @@ const ProductScreen = () => {
               <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Group>
-                  {categories?.map((category, index) => (
+                  {categoriesWithAll.map((category, index) => (
                     <Select.Item
                       key={category.id}
                       value={category.name}
@@ -189,8 +191,15 @@ const ProductScreen = () => {
         <Separator />
 
         {/* Product Grid */}
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <XStack flexWrap="wrap" justifyContent="space-between">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 160}}>
+          <XStack
+            padding={0}
+            flexWrap="wrap"
+            justifyContent="space-between"
+            overflow="visible" // <-- Important
+          >
             {filteredProducts.map(product => (
               <Card
                 key={product.id}
@@ -198,7 +207,12 @@ const ProductScreen = () => {
                 bordered
                 width="48%"
                 marginBottom="$3"
-                onPress={() => handleProductPress(product)}>
+                onPress={() => handleProductPress(product)}
+                style={{
+                  elevation: 4, // Android shadow
+                  backgroundColor: 'white',
+                  boxShadow: 'none',
+                }}>
                 <Image
                   source={{uri: product.image}}
                   width="100%"
@@ -220,7 +234,7 @@ const ProductScreen = () => {
             ))}
           </XStack>
 
-          {filteredProducts.length === 0 && (
+          {filteredProducts?.length === 0 && (
             <YStack height={300} justifyContent="center" alignItems="center">
               <Icon name="search-off" size={48} color="#ccc" />
               <Text fontSize="$4" color="$gray10" marginTop="$2">

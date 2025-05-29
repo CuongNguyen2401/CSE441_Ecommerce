@@ -2,6 +2,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {lazy} from 'react';
 import {HomeStackParamList, NavigationRoutes} from '../types';
 import HomeScreen from '@screens/User/home/HomeScreen';
+import {ProductScreen} from '@screens/User/products/components';
 
 // Lazy load secondary screens
 const ProductDetailsScreen = lazy(
@@ -31,6 +32,11 @@ const HomeStackNavigator = () => {
         name={NavigationRoutes.CATEGORY_PRODUCTS}
         component={CategoryProductsScreen}
         options={({route}) => ({title: route.params.category})}
+      />
+      <HomeStack.Screen
+        name={NavigationRoutes.PRODUCTS}
+        component={ProductScreen}
+        options={{title: 'Products'}}
       />
       {/* <HomeStack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} /> */}
     </HomeStack.Navigator>
