@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryResponse} from 'queries/category/types';
+import {useHomeScreen} from '../../useHomeScreen';
 
 // Map category names to Material Icons
 const getCategoryIcon = (categoryName: string): string => {
@@ -28,17 +29,12 @@ const getCategoryIcon = (categoryName: string): string => {
 };
 
 export const Categories = () => {
-  const {categories, isPending} = useGetAllCategories({enabled: true});
-  const navigation =
-    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  const {
+    state: {isCategoryPending, categories},
+    handlers: {handleCategoryPress},
+  } = useHomeScreen();
 
-  const handleCategoryPress = (category: CategoryResponse) => {
-    navigation.navigate(NavigationRoutes.CATEGORY_PRODUCTS, {
-      category: category.name,
-    });
-  };
-
-  if (isPending) {
+  if (isCategoryPending) {
     return (
       <YStack height={150} justifyContent="center" alignItems="center">
         <Spinner size="large" color="$blue10" />

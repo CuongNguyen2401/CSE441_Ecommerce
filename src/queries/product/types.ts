@@ -1,4 +1,4 @@
-import {CategoryResponse} from 'services/Product/types';
+import {CategoryResponse} from 'queries/category/types';
 
 export type ProductUpdateRequest = {
   [key: string]: any;

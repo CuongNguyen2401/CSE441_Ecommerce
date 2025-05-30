@@ -4,28 +4,16 @@ import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
 import {useGetMostSoldProducts} from 'queries/product/useGetMostSoldProducts';
 import React from 'react';
 import {Button, Card, H4, Image, Spinner, Text, XStack, YStack} from 'tamagui';
+import {useHomeScreen} from '../../useHomeScreen';
 
 export const FeaturedProducts = () => {
-  const {data: mostSoldProducts, isPending} = useGetMostSoldProducts({
-    enabled: true,
-  });
-
-  const navigation =
-    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
-
-  const handleProductPress = (productId: number) => {
-    navigation.navigate(NavigationRoutes.PRODUCT_DETAILS, {
-      productId,
-    });
-  };
-
-  const handleSeeAll = () => {
-    // Navigate to the Products tab
-    navigation.navigate(NavigationRoutes.PRODUCTS);
-  };
+  const {
+    state: {isMostSoldPending, mostSoldProducts},
+    handlers: {handleProductPress, handleSeeAll},
+  } = useHomeScreen();
 
   // Handle loading state
-  if (isPending) {
+  if (isMostSoldPending) {
     return (
       <YStack height={200} justifyContent="center" alignItems="center">
         <Spinner size="large" color="$blue10" />

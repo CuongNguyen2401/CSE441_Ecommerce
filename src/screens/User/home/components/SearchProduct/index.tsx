@@ -4,21 +4,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Input, XStack} from 'tamagui';
 import {HomeStackParamList, NavigationRoutes} from 'navigation/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useHomeScreen} from '../../useHomeScreen';
 
 const SearchProduct = () => {
   const [searchText, setSearchText] = useState('');
-  const navigation =
-    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
-  const handleSearch = (text: string) => {
-    if (text.trim().length > 0) {
-      // Navigate to products screen with search query
-      navigation.navigate(NavigationRoutes.CATEGORY_PRODUCTS, {
-        category: 'Search Results',
-        searchQuery: text,
-      });
-    }
-  };
+  const {
+    handlers: {handleSearch},
+  } = useHomeScreen();
 
   return (
     <XStack

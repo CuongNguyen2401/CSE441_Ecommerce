@@ -5,9 +5,7 @@ import {ApiResponseType, responseWrapper} from 'services/helpers';
 import {productApis} from '.';
 
 export const useGetMostSoldProducts = (
-  options: UseQueryOptions<ApiResponseType<SaleProductResponse[]>, Error> & {
-    enabled?: boolean;
-  },
+  options?: UseQueryOptions<ApiResponseType<SaleProductResponse[]>, Error>,
 ) => {
   const {data, isLoading, isError, error} = useQuery<
     ApiResponseType<SaleProductResponse[]>,
@@ -20,10 +18,9 @@ export const useGetMostSoldProducts = (
       );
     },
     {
-      
       notifyOnChangeProps: ['data'],
       keepPreviousData: true,
-      enabled: options?.enabled ?? true,
+      enabled: true,
       ...options,
     },
   );
