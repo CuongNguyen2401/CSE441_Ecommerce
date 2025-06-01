@@ -1,9 +1,13 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { lazy } from 'react';
-import { NavigationRoutes, OrdersStackParamList } from '../types';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {lazy} from 'react';
+import {NavigationRoutes, OrdersStackParamList} from '../types';
 import OrdersScreen from '@screens/User/orders/OrdersScreen';
-const CheckoutScreen = lazy(() => import('@screens/User/cart/CheckoutScreen'));
-const PaymentSuccessScreen = lazy(() => import('@screens/User/cart/PaymentSuccessScreen'));
+const CheckoutScreen = lazy(
+  () => import('@screens/User/cart/components/CheckoutScreen/index'),
+);
+const PaymentSuccessScreen = lazy(
+  () => import('@screens/User/cart/components/PaymentSuccessScreen/index'),
+);
 
 const OrdersStack = createNativeStackNavigator<OrdersStackParamList>();
 
@@ -21,12 +25,12 @@ const OrdersStackNavigator = () => {
       {/*    options={{title: 'Order Details'}}*/}
       {/*/>*/}
       <OrdersStack.Screen
-        name={NavigationRoutes.CHECKOUT}  
+        name={NavigationRoutes.CHECKOUT}
         component={CheckoutScreen}
         options={{title: 'Checkout'}}
       />
       <OrdersStack.Screen
-        name={NavigationRoutes.PAYMENT_SUCCESS}  
+        name={NavigationRoutes.PAYMENT_SUCCESS}
         component={PaymentSuccessScreen}
         options={{title: 'Payment Successful'}}
       />

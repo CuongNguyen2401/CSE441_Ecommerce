@@ -4,7 +4,7 @@ import {ApiResponseType, responseWrapper} from 'services/helpers';
 
 export const useSearchProducts = (
   options?: UseQueryOptions<ApiResponseType<ProductResponse[]>, Error> & {
-    query: string;
+    query?: string;
   },
 ) => {
   const {

@@ -11,9 +11,11 @@ const ForgotPasswordScreen = lazy(() => import('@screens/Auth/ForgotPassword'));
 const ProductDetailsScreen = lazy(
   () => import('@screens/User/products/components/ProductDetailScreen'),
 );
-const CheckoutScreen = lazy(() => import('@screens/User/cart/CheckoutScreen'));
+const CheckoutScreen = lazy(
+  () => import('@screens/User/cart/components/CheckoutScreen'),
+);
 const PaymentSuccessScreen = lazy(
-  () => import('@screens/User/cart/PaymentSuccessScreen'),
+  () => import('@screens/User/cart/components/PaymentSuccessScreen'),
 );
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();

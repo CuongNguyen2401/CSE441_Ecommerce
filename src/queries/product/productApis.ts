@@ -71,7 +71,7 @@ const apis = (baseUrl = APP_APIS.PRODUCT) => {
     });
   };
   const searchProducts = (query: string) => {
-    return privateRequest.get('/search', {
+    return privateRequest.get(`/search?${query}`, {
       params: {q: query},
     });
   };

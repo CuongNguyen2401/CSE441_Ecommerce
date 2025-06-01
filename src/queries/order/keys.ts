@@ -6,4 +6,5 @@ export const CART_KEYS = {
   CLEAR_CART: 'clear-cart',
   VALIDATE_COUPON: 'validate-coupon',
   CREATE_ORDER: 'create-order',
+  GET_ORDER: 'GET_ORDER',
 };

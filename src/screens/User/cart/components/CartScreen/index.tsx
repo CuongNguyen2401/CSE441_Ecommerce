@@ -11,48 +11,51 @@ import {
   H4,
   Separator,
   Input,
-  View,
   Spinner,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationRoutes} from 'navigation/types';
-import {useCart} from 'context/CartContext';
-import {useValidateCoupon} from 'queries/cart';
+import {useCartScreen} from '../../useCartScreen';
+import {useValidateCoupon} from 'queries/order/useValidateCoupon';
+import {useOrderStore} from 'store/order/useOrderStore';
 
 const CartScreen = () => {
   const navigation = useNavigation();
+  const [promoCode, setPromoCode] = useState('');
+
+  // Get cart data from store
   const {
-    state: {
-      items,
-      subtotal,
-      shippingCost,
-      tax,
-      promoDiscount,
-      total,
-      promoCode: appliedPromoCode,
-    },
+    orderItems: items,
+    subtotal,
     removeItem,
     updateItemQuantity,
-    applyPromo,
-    removePromo,
-  } = useCart();
+    couponCode: appliedCouponCode,
+  } = useOrderStore();
 
-  const [promoCode, setPromoCode] = useState('');
+  // Coupon validation
   const {
     validateCoupon,
-    isValidating,
-    error: couponError,
     validCoupon,
+    isValidating: isValidatingCoupon,
+    error: couponError,
     clearError,
   } = useValidateCoupon();
 
-  const handleQuantityChange = (id: number, newQuantity: number) => {
+  // Calculate additional costs
+  const shippingCost = subtotal > 50 ? 0 : 5.99;
+  const tax = subtotal * 0.08;
+  const promoDiscount = validCoupon
+    ? subtotal * (validCoupon.discount || 0)
+    : 0;
+  const total = subtotal + shippingCost + tax - promoDiscount;
+
+  const handleQuantityChange = (index: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    updateItemQuantity(id, newQuantity);
+    updateItemQuantity(index, newQuantity);
   };
 
-  const handleRemoveItem = (id: number) => {
-    removeItem(id);
+  const handleRemoveItem = (index: number) => {
+    removeItem(index);
   };
 
   const handleApplyPromo = () => {
@@ -63,9 +66,16 @@ const CartScreen = () => {
   // Apply the coupon after validation
   React.useEffect(() => {
     if (validCoupon) {
-      applyPromo(validCoupon.code, subtotal * validCoupon.discount);
+      // Update the coupon code in store
+      useOrderStore.setState({couponCode: validCoupon.code});
+      setPromoCode('');
     }
-  }, [validCoupon, subtotal, applyPromo]);
+  }, [validCoupon]);
+
+  const removePromo = () => {
+    useOrderStore.setState({couponCode: ''});
+    setPromoCode('');
+  };
 
   const handleCheckout = () => {
     navigation.navigate(NavigationRoutes.CHECKOUT);
@@ -102,8 +112,8 @@ const CartScreen = () => {
             <>
               {/* Cart Items */}
               <YStack gap="$3">
-                {items.map(item => (
-                  <Card key={item.id} bordered padding="$3">
+                {items.map((item, index) => (
+                  <Card key={`item-${index}`} bordered padding="$3">
                     <XStack gap="$3">
                       <Image
                         source={{uri: item.image}}
@@ -114,22 +124,11 @@ const CartScreen = () => {
                       />
                       <YStack flex={1} gap="$1">
                         <Text fontSize="$3" fontWeight="bold" numberOfLines={1}>
-                          {item.name}
+                          {item.productName}
                         </Text>
-                        {item.color && (
-                          <Text fontSize="$2" color="$gray10">
-                            Color: {item.color}
-                          </Text>
-                        )}
                         <Text fontSize="$4" color="$blue10" fontWeight="bold">
-                          ${(item.salePrice || item.price).toFixed(2)}
+                          ${(item.price || 0).toFixed(2)}
                         </Text>
-
-                        {!item.inStock && (
-                          <Text fontSize="$2" color="$red10">
-                            Out of Stock
-                          </Text>
-                        )}
 
                         <XStack
                           justifyContent="space-between"
@@ -139,18 +138,24 @@ const CartScreen = () => {
                             <Button
                               size="$2"
                               onPress={() =>
-                                handleQuantityChange(item.id, item.quantity - 1)
+                                handleQuantityChange(
+                                  index,
+                                  (item.quantity || 1) - 1,
+                                )
                               }
-                              disabled={item.quantity <= 1}>
+                              disabled={(item.quantity || 1) <= 1}>
                               <Icon name="remove" size={16} />
                             </Button>
                             <Text fontSize="$3" width={30} textAlign="center">
-                              {item.quantity}
+                              {item.quantity || 1}
                             </Text>
                             <Button
                               size="$2"
                               onPress={() =>
-                                handleQuantityChange(item.id, item.quantity + 1)
+                                handleQuantityChange(
+                                  index,
+                                  (item.quantity || 1) + 1,
+                                )
                               }>
                               <Icon name="add" size={16} />
                             </Button>
@@ -159,7 +164,7 @@ const CartScreen = () => {
                           <Button
                             size="$2"
                             variant="outlined"
-                            onPress={() => handleRemoveItem(item.id)}>
+                            onPress={() => handleRemoveItem(index)}>
                             <Icon name="delete" size={16} color="$red10" />
                           </Button>
                         </XStack>
@@ -168,7 +173,6 @@ const CartScreen = () => {
                   </Card>
                 ))}
               </YStack>
-
               {/* Promo Code */}
               <Card bordered padding="$3">
                 <YStack gap="$2">
@@ -184,21 +188,19 @@ const CartScreen = () => {
                     />
                     <Button
                       onPress={handleApplyPromo}
-                      disabled={isValidating || !promoCode.trim()}>
-                      {isValidating ? <Spinner size="small" /> : 'Apply'}
+                      disabled={isValidatingCoupon || !promoCode.trim()}>
+                      {isValidatingCoupon ? <Spinner size="small" /> : 'Apply'}
                     </Button>
                   </XStack>
-
                   {couponError && (
                     <Text fontSize="$2" color="$red10">
                       {couponError}
                     </Text>
                   )}
-
-                  {appliedPromoCode && (
+                  {appliedCouponCode && (
                     <XStack gap="$2" alignItems="center">
                       <Text fontSize="$2" color="$green10">
-                        Promo code '{appliedPromoCode}' applied!
+                        Promo code '{appliedCouponCode}' applied!
                       </Text>
                       <Button
                         size="$1"
@@ -210,7 +212,6 @@ const CartScreen = () => {
                   )}
                 </YStack>
               </Card>
-
               {/* Order Summary */}
               <Card bordered padding="$3">
                 <YStack gap="$2">
@@ -266,7 +267,6 @@ const CartScreen = () => {
                   </XStack>
                 </YStack>
               </Card>
-
               {/* Checkout Button */}
               <Button
                 size="$4"
@@ -276,7 +276,6 @@ const CartScreen = () => {
                 disabled={items.length === 0}>
                 Proceed to Checkout
               </Button>
-
               <Button
                 variant="outlined"
                 size="$4"

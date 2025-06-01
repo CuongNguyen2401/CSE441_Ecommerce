@@ -3,6 +3,7 @@ import React, {lazy} from 'react';
 import {HomeStackParamList, NavigationRoutes} from '../types';
 import HomeScreen from '@screens/User/home/HomeScreen';
 import {ProductScreen} from '@screens/User/products/components';
+import {SearchScreen} from '@screens/User/products/components/SearchProductScreen';
 
 // Lazy load secondary screens
 const ProductDetailsScreen = lazy(
@@ -38,7 +39,11 @@ const HomeStackNavigator = () => {
         component={ProductScreen}
         options={{title: 'Products'}}
       />
-      {/* <HomeStack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} /> */}
+      <HomeStack.Screen
+        name={NavigationRoutes.SEARCH}
+        component={SearchScreen}
+        options={{title: 'Search'}}
+      />
     </HomeStack.Navigator>
   );
 };

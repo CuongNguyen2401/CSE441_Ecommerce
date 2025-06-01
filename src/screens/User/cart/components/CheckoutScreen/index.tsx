@@ -20,14 +20,9 @@ import {
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationRoutes} from 'navigation/types';
-import {useCart} from 'context/CartContext';
-import {useCreateOrder, useProcessPayment} from 'queries/cart';
-import {
-  CardDetails,
-  OrderItemRequest,
-  OrderRequest,
-  ShippingAddress,
-} from 'queries/cart/types';
+import {useOrderStore} from 'store/order/useOrderStore';
+import {useCreateOrder} from 'queries/order/useCreateOrder';
+import {OrderPayload} from 'queries/order/types';
 import {Alert} from 'react-native';
 
 // Mock addresses for demonstration until user profile integration
@@ -54,17 +49,16 @@ const paymentMethods = [
 const CheckoutScreen = () => {
   const navigation = useNavigation();
   const {
-    state: {
-      items,
-      subtotal,
-      shippingCost,
-      tax,
-      promoDiscount,
-      total,
-      promoCode,
-    },
+    orderItems,
+    subtotal,
+    couponCode,
+    customerName,
+    email,
+    phoneNumber,
+    address,
+    note,
     clearCart,
-  } = useCart();
+  } = useOrderStore();
 
   const [selectedAddress, setSelectedAddress] = useState(
     addresses[0]?.id.toString(),
@@ -76,8 +70,11 @@ const CheckoutScreen = () => {
   const [cardCvv, setCardCvv] = useState('');
   const [saveCard, setSaveCard] = useState(false);
 
-  const {createOrder, isCreating, orderData} = useCreateOrder();
-  const {processPayment, isProcessing, paymentData} = useProcessPayment();
+  const {createOrder, isCreating, error} = useCreateOrder(); // Calculate totals
+  const shippingCost: number = 0; // Free shipping for now
+  const tax: number = subtotal * 0.1; // 10% tax
+  const promoDiscount: number = 0; // No promo discount for now (until coupon validation is implemented)
+  const total: number = subtotal + shippingCost + tax - promoDiscount;
 
   const handleAddAddress = () => {
     navigation.navigate(NavigationRoutes.MAIN, {
@@ -85,8 +82,7 @@ const CheckoutScreen = () => {
       params: {screen: NavigationRoutes.ADD_ADDRESS},
     });
   };
-
-  const prepareOrderData = (): OrderRequest => {
+  const prepareOrderData = (): OrderPayload => {
     const selectedAddressObj = addresses.find(
       addr => addr.id.toString() === selectedAddress,
     );
@@ -95,44 +91,16 @@ const CheckoutScreen = () => {
       throw new Error('No shipping address selected');
     }
 
-    const shippingAddress: ShippingAddress = {
-      name: selectedAddressObj.name,
-      street: selectedAddressObj.street,
-      city: selectedAddressObj.city,
-      state: selectedAddressObj.state,
-      zip: selectedAddressObj.zip,
-      country: selectedAddressObj.country,
-      phone: selectedAddressObj.phone,
-      isDefault: selectedAddressObj.isDefault,
-    };
-
-    const orderItems: OrderItemRequest[] = items.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      price: item.salePrice || item.price,
-    }));
-
-    let cardDetails: CardDetails | undefined;
-
-    if (paymentMethod === 'credit') {
-      cardDetails = {
-        cardNumber,
-        cardName,
-        expiryDate: cardExpiry,
-        cvv: cardCvv,
-        saveCard,
-      };
-    }
-
     return {
-      orderItems,
-      couponCode: promoCode,
-      shippingAddress,
-      paymentMethod,
-      cardDetails,
+      customerName: selectedAddressObj.name,
+      email: email || 'customer@example.com', // Fallback email
+      phoneNumber: selectedAddressObj.phone,
+      address: `${selectedAddressObj.street}, ${selectedAddressObj.city}, ${selectedAddressObj.state} ${selectedAddressObj.zip}, ${selectedAddressObj.country}`,
+      note: note || '',
+      couponCode: couponCode || '',
+      orderItems: orderItems,
     };
   };
-
   const handlePlaceOrder = () => {
     try {
       // Validate inputs
@@ -143,35 +111,22 @@ const CheckoutScreen = () => {
         }
       }
 
-      if (items.length === 0) {
+      if (orderItems.length === 0) {
         Alert.alert('Cart Empty', 'Your cart is empty');
         return;
       }
 
       const orderData = prepareOrderData();
 
-      // First create the order
+      // Create the order
       createOrder(orderData, {
         onSuccess: response => {
-          const createdOrder = response.data;
+          // Clear the cart after successful order creation
+          clearCart();
 
-          // Then process the payment
-          processPayment(orderData, {
-            onSuccess: paymentResponse => {
-              // Clear the cart after successful order creation and payment
-              clearCart();
-
-              // Navigate to success screen
-              navigation.navigate(NavigationRoutes.PAYMENT_SUCCESS, {
-                orderId: createdOrder.id,
-              });
-            },
-            onError: err => {
-              Alert.alert(
-                'Payment Failed',
-                err.response?.data?.message || 'Failed to process payment',
-              );
-            },
+          // Navigate to success screen
+          navigation.navigate(NavigationRoutes.PAYMENT_SUCCESS, {
+            orderId: response.id || 1, // Fallback orderId if response doesn't have id
           });
         },
         onError: err => {
@@ -190,17 +145,15 @@ const CheckoutScreen = () => {
     <ScrollView flex={1} backgroundColor="$background">
       <YStack padding="$4" gap="$4">
         <H4>Checkout</H4>
-
         {/* Order Summary */}
         <Card bordered padding="$3">
           <YStack gap="$2">
             <Text fontSize="$3" fontWeight="bold">
               Order Summary
-            </Text>
-
+            </Text>{' '}
             <YStack gap="$2">
-              {items.map(item => (
-                <XStack key={item.id} gap="$3">
+              {orderItems.map((item, index) => (
+                <XStack key={index} gap="$3">
                   <Image
                     source={{uri: item.image}}
                     width={50}
@@ -210,31 +163,25 @@ const CheckoutScreen = () => {
                   />
                   <YStack flex={1}>
                     <Text fontSize="$3" numberOfLines={1}>
-                      {item.name}
+                      {item.productName}
                     </Text>
                     <Text fontSize="$2" color="$gray10">
                       Qty: {item.quantity}
                     </Text>
                   </YStack>
                   <Text fontSize="$3" fontWeight="bold">
-                    $
-                    {((item.salePrice || item.price) * item.quantity).toFixed(
-                      2,
-                    )}
+                    ${((item.price || 0) * (item.quantity || 0)).toFixed(2)}
                   </Text>
                 </XStack>
               ))}
             </YStack>
-
             <Separator marginVertical="$1" />
-
             <XStack justifyContent="space-between">
               <Text fontSize="$3" color="$gray10">
                 Subtotal
               </Text>
               <Text fontSize="$3">${subtotal.toFixed(2)}</Text>
             </XStack>
-
             <XStack justifyContent="space-between">
               <Text fontSize="$3" color="$gray10">
                 Shipping
@@ -243,14 +190,12 @@ const CheckoutScreen = () => {
                 {shippingCost === 0 ? 'Free' : `$${shippingCost.toFixed(2)}`}
               </Text>
             </XStack>
-
             <XStack justifyContent="space-between">
               <Text fontSize="$3" color="$gray10">
                 Tax
               </Text>
               <Text fontSize="$3">${tax.toFixed(2)}</Text>
             </XStack>
-
             {promoDiscount > 0 && (
               <XStack justifyContent="space-between">
                 <Text fontSize="$3" color="$green10">
@@ -261,9 +206,7 @@ const CheckoutScreen = () => {
                 </Text>
               </XStack>
             )}
-
             <Separator marginVertical="$1" />
-
             <XStack justifyContent="space-between">
               <Text fontSize="$4" fontWeight="bold">
                 Total
@@ -274,7 +217,6 @@ const CheckoutScreen = () => {
             </XStack>
           </YStack>
         </Card>
-
         {/* Shipping Address */}
         <Card bordered padding="$3">
           <YStack gap="$3">
@@ -325,7 +267,6 @@ const CheckoutScreen = () => {
             )}
           </YStack>
         </Card>
-
         {/* Payment Method */}
         <Card bordered padding="$3">
           <YStack gap="$3">
@@ -423,20 +364,17 @@ const CheckoutScreen = () => {
               </Form>
             )}
           </YStack>
-        </Card>
-
+        </Card>{' '}
         {/* Place Order Button */}
         <Button
           size="$4"
           themeInverse
           onPress={handlePlaceOrder}
-          disabled={isCreating || isProcessing || items.length === 0}>
-          {isCreating || isProcessing ? (
+          disabled={isCreating || orderItems.length === 0}>
+          {isCreating ? (
             <XStack gap="$2" alignItems="center">
               <Spinner size="small" color="$color" />
-              <Text>
-                {isCreating ? 'Creating Order...' : 'Processing Payment...'}
-              </Text>
+              <Text>Creating Order...</Text>
             </XStack>
           ) : (
             'Place Order'

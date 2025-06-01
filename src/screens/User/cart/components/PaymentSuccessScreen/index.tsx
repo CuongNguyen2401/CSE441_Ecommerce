@@ -1,6 +1,6 @@
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {NavigationRoutes} from 'navigation/types';
-import {orderApis} from 'queries/cart';
+import {orderApis} from 'queries/order';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Button, Card, Circle, H2, Text, YStack, Spinner} from 'tamagui';

@@ -6,7 +6,6 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import {TamaguiProvider} from 'tamagui';
 import AppNavigator from './src/navigation/AppNavigator.tsx';
 import tamaguiConfig from './tamagui.config';
-import {CartProvider} from './src/context/CartContext.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,18 +23,16 @@ function App(): React.JSX.Element {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <TamaguiProvider config={tamaguiConfig}>
-            <SafeAreaProvider>
-              <StatusBar
-                barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-                backgroundColor={isDarkMode ? '#000' : '#fff'}
-              />
-              <AppNavigator />
-            </SafeAreaProvider>
-          </TamaguiProvider>
-          <Toast />
-        </CartProvider>
+        <TamaguiProvider config={tamaguiConfig}>
+          <SafeAreaProvider>
+            <StatusBar
+              barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+              backgroundColor={isDarkMode ? '#000' : '#fff'}
+            />
+            <AppNavigator />
+          </SafeAreaProvider>
+        </TamaguiProvider>
+        <Toast />
       </QueryClientProvider>
     </StrictMode>
   );

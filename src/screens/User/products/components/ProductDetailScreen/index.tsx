@@ -19,6 +19,9 @@ import {
   XStack,
   YStack,
 } from 'tamagui';
+import useProductScreen from '../../useProductScreen';
+import {ProductResponse} from 'queries/product';
+import {OrderItem} from 'queries/order';
 
 type ProductDetailsParams = {
   productId: number;
@@ -54,16 +57,18 @@ const ProductDetailScreen = () => {
     >();
   const {productId} = route.params;
 
+  const {
+    handlers: {addItem},
+  } = useProductScreen();
+
   // Fetch product data
   const {product, isPending} = useGetProductById({productId});
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
-    // In a real app, you would add the product to the cart
-    console.log(`Added ${quantity} ${product?.name} to cart`);
-    //navigation.navigate('CartTab');
+  const handleAddToCart = (product: OrderItem) => {
+    addItem(product);
   };
 
   const handleBuyNow = () => {
@@ -213,7 +218,13 @@ const ProductDetailScreen = () => {
               fontWeight="bold"
               size="$4"
               disabled={product.quantity <= 0}
-              onPress={handleAddToCart}>
+              onPress={() =>
+                handleAddToCart({
+                  price: product?.price,
+                  productName: product?.name,
+                  quantity: quantity,
+                })
+              }>
               <Icon name="shopping-cart" size={20} color="#3B82F6" />
               <Text color="$blue10" marginLeft="$1">
                 Add to Cart

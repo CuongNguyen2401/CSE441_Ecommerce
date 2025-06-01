@@ -22,9 +22,8 @@ export function useHomeScreen() {
   const handleSearch = (text: string) => {
     if (text.trim().length > -1) {
       // Navigate to products screen with search query
-      navigation.navigate(NavigationRoutes.CATEGORY_PRODUCTS, {
-        category: 'Search Results',
-        searchQuery: text,
+      navigation.navigate(NavigationRoutes.SEARCH, {
+        query: text,
       });
     }
   };
