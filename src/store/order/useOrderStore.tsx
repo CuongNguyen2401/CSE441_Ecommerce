@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {persist, createJSONStorage, StateStorage} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {OrderItem, OrderPayload} from 'queries/order';
+import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
 interface OrderStore extends OrderPayload {
   subtotal: number;
@@ -34,6 +35,13 @@ export const useOrderStore = create<OrderStore>()(
         const orderItems = [...get().orderItems, item];
         const subtotal = calculateSubtotal(orderItems);
         set({orderItems, subtotal});
+        // Show success toast
+        Toast.show({
+          type: 'success',
+          text1: 'Item added to cart',
+          position: 'top',
+          visibilityTime: 1000,
+        });
       },
 
       removeItem: (index: number) => {

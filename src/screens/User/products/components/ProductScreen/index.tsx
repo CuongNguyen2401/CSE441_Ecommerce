@@ -114,7 +114,7 @@ const ProductScreen = () => {
             onValueChange={setSelectedCategory}
             disablePreventBodyScroll>
             <Select.Trigger
-              width={180}
+              width={160}
               iconAfter={<Icon name="arrow-drop-down" size={20} />}>
               <Select.Value placeholder="Select category" />
             </Select.Trigger>
@@ -153,7 +153,7 @@ const ProductScreen = () => {
             onValueChange={setSelectedSort}
             disablePreventBodyScroll>
             <Select.Trigger
-              width={180}
+              width={160}
               iconAfter={<Icon name="arrow-drop-down" size={20} />}>
               <Select.Value placeholder="Sort by" />
             </Select.Trigger>
