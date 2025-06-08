@@ -20,7 +20,7 @@ import {
   YStack,
 } from 'tamagui';
 import useProductScreen from '../../useProductScreen';
-import {ProductResponse} from 'queries/product';
+import {ProductResponse} from 'queries/product/types';
 import {OrderItem} from 'queries/order';
 
 type ProductDetailsParams = {

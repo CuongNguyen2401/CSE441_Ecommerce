@@ -25,7 +25,7 @@ const apis = (baseUrl = APP_APIS.PRODUCT) => {
       formData.append('file', image);
     }
 
-    return privateRequest.post('/', formData, {
+    return privateRequest.post('', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

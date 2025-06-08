@@ -150,7 +150,7 @@ const CheckoutScreen = () => {
           <YStack gap="$2">
             <Text fontSize="$3" fontWeight="bold">
               Order Summary
-            </Text>{' '}
+            </Text>
             <YStack gap="$2">
               {orderItems.map((item, index) => (
                 <XStack key={index} gap="$3">
@@ -364,7 +364,7 @@ const CheckoutScreen = () => {
               </Form>
             )}
           </YStack>
-        </Card>{' '}
+        </Card>
         {/* Place Order Button */}
         <Button
           size="$4"

@@ -17,6 +17,19 @@ const CheckoutScreen = lazy(
 const PaymentSuccessScreen = lazy(
   () => import('@screens/User/cart/components/PaymentSuccessScreen'),
 );
+// Admin screens
+const AdminProductsScreen = lazy(
+  () => import('@screens/Admin/products/ProductManagementScreen'),
+);
+const CreateProductScreen = lazy(
+  () => import('@screens/Admin/products/CreateProductScreen'),
+);
+const EditProductScreen = lazy(
+  () => import('@screens/Admin/products/EditProductScreen'),
+);
+const ProductDetailsAdminScreen = lazy(
+  () => import('@screens/Admin/products/ProductDetailsScreen'),
+);
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -60,6 +73,26 @@ const AppNavigator = () => {
             name={NavigationRoutes.PAYMENT_SUCCESS}
             component={PaymentSuccessScreen}
             options={{headerShown: true, title: 'Payment Successful'}}
+          />
+          <RootStack.Screen
+            name={NavigationRoutes.ADMIN_PRODUCTS}
+            component={AdminProductsScreen}
+            options={{headerShown: true, title: 'Product Management'}}
+          />
+          <RootStack.Screen
+            name={NavigationRoutes.CREATE_PRODUCT}
+            component={CreateProductScreen}
+            options={{headerShown: true, title: 'Create Product'}}
+          />
+          <RootStack.Screen
+            name={NavigationRoutes.EDIT_PRODUCT}
+            component={EditProductScreen}
+            options={{headerShown: true, title: 'Edit Product'}}
+          />
+          <RootStack.Screen
+            name={NavigationRoutes.PRODUCT_DETAILS_ADMIN}
+            component={ProductDetailsAdminScreen}
+            options={{headerShown: true, title: 'Product Details'}}
           />
         </RootStack.Navigator>
       </Suspense>

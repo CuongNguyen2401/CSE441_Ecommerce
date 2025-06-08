@@ -17,7 +17,7 @@ import {
   View,
 } from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {ProductResponse} from 'queries/product';
+import {ProductResponse} from 'queries/product/types';
 import {useGetProductsByCategory} from 'queries/product/useGetProductsByCategory';
 
 const sortOptions = [

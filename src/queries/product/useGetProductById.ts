@@ -1,7 +1,8 @@
 import {useQuery, UseQueryOptions} from 'react-query';
 import {PRODUCT_KEYS} from './keys';
-import {productApis, ProductResponse} from '.';
+import {ProductResponse} from './types';
 import {ApiResponseType, responseWrapper} from 'services/helpers';
+import {productApis} from '.';
 
 export const useGetProductById = (
   options?: UseQueryOptions<ApiResponseType<ProductResponse>, Error> & {

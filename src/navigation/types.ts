@@ -32,7 +32,6 @@ export enum NavigationRoutes {
   // Orders Stack Routes
   ORDERS = 'Orders',
   ORDER_DETAILS = 'OrderDetails',
-
   // Profile Stack Routes
   PROFILE = 'Profile',
   EDIT_PROFILE = 'EditProfile',
@@ -41,6 +40,11 @@ export enum NavigationRoutes {
   EDIT_ADDRESS = 'EditAddress',
   SETTINGS = 'Settings',
   ABOUT = 'About',
+  // Admin Routes
+  ADMIN_PRODUCTS = 'AdminProducts',
+  CREATE_PRODUCT = 'CreateProduct',
+  EDIT_PRODUCT = 'EditProduct',
+  PRODUCT_DETAILS_ADMIN = 'ProductDetailsAdmin',
 }
 // Root Navigator
 export type RootStackParamList = {
@@ -49,7 +53,11 @@ export type RootStackParamList = {
   [NavigationRoutes.FORGOT_PASSWORD]: NavigatorScreenParams<AuthStackParamList>;
   [NavigationRoutes.PRODUCT_DETAILS]: {productId: number};
   [NavigationRoutes.CHECKOUT]: undefined;
-  [NavigationRoutes.PAYMENT_SUCCESS]: {orderId: number};
+  [NavigationRoutes.PAYMENT_SUCCESS]: {orderId: number}; // Admin Routes
+  [NavigationRoutes.ADMIN_PRODUCTS]: undefined;
+  [NavigationRoutes.CREATE_PRODUCT]: undefined;
+  [NavigationRoutes.EDIT_PRODUCT]: {productId: number};
+  [NavigationRoutes.PRODUCT_DETAILS_ADMIN]: {productId: number};
 };
 
 // Auth Stack

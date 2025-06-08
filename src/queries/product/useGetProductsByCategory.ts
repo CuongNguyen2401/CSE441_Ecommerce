@@ -6,7 +6,7 @@ import {
   GetPropertiesParams,
   responseWrapper,
 } from 'services/helpers';
-import {productApis} from '.';
+import apis from './productApis';
 import {useState} from 'react';
 
 export const useGetProductsByCategory = (
@@ -15,6 +15,7 @@ export const useGetProductsByCategory = (
     params?: GetPropertiesParams;
   },
 ) => {
+  const productApis = apis();
   const [params, setParams] = useState<GetPropertiesParams>(
     options?.params || {},
   );

@@ -19,7 +19,7 @@ import {NO_DATA} from 'utils';
 
 const ProfileScreen = () => {
   const {
-    state: {user: userData},
+    state: {user: userData, isAdmin},
     handlers: {
       handleEditProfile,
       handleAddresses,
@@ -28,6 +28,7 @@ const ProfileScreen = () => {
       handleLogout,
       handleOrdersPress,
       handleCartPress,
+      handleAdminPress,
     },
   } = useProfileScreen();
 
@@ -66,7 +67,6 @@ const ProfileScreen = () => {
             </Button>
           </YStack>
         </Card>
-
         {/* Quick Actions */}
         <YStack gap="$3">
           <H4>Account</H4>
@@ -114,7 +114,6 @@ const ProfileScreen = () => {
             </YStack>
           </Card>
         </YStack>
-
         {/* Default Address */}
         {/* {userData?.addresses.length > 0 && (
           <YStack gap="$3">
@@ -142,7 +141,6 @@ const ProfileScreen = () => {
             </Card>
           </YStack>
         )} */}
-
         {/* Payment Methods */}
         {/* {userData?.paymentMethods.length > 0 && (
           <YStack gap="$3">
@@ -164,7 +162,29 @@ const ProfileScreen = () => {
             </Card>
           </YStack>
         )} */}
+        {/* Admin Access - Only show for admin users */}
+        {isAdmin && (
+          <YStack gap="$3">
+            <H4>Administration</H4>
 
+            <Card bordered>
+              <YStack>
+                <Button
+                  size="$4"
+                  justifyContent="flex-start"
+                  backgroundColor="transparent"
+                  onPress={handleAdminPress}>
+                  <XStack gap="$3" flex={1} alignItems="center">
+                    <Icon name="admin-panel-settings" size={24} color="#666" />
+                    <Text fontSize="$3">Product Management</Text>
+                    <View flex={1} />
+                    <Icon name="chevron-right" size={24} color="#666" />
+                  </XStack>
+                </Button>
+              </YStack>
+            </Card>
+          </YStack>
+        )}
         {/* Settings */}
         <YStack gap="$3">
           <H4>Settings</H4>
@@ -201,7 +221,6 @@ const ProfileScreen = () => {
             </YStack>
           </Card>
         </YStack>
-
         {/* Logout Button */}
         <Button
           size="$4"

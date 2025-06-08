@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {NavigationRoutes} from 'navigation/types';
 import {useGetAllCategories} from 'queries/category/useGetAllCategories';
-import {ProductResponse} from 'queries/product';
+import {ProductResponse} from 'queries/product/types';
 import {useGetAllProducts} from 'queries/product/useGetAllProducts';
 import React, {useMemo, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';

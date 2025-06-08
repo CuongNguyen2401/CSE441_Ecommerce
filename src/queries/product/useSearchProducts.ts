@@ -1,6 +1,8 @@
 import {useQuery, UseQueryOptions} from 'react-query';
-import {PRODUCT_KEYS, productApis, ProductResponse} from '.';
+import {PRODUCT_KEYS} from './keys';
+import {ProductResponse} from './types';
 import {ApiResponseType, responseWrapper} from 'services/helpers';
+import {productApis} from '.';
 
 export const useSearchProducts = (
   options?: UseQueryOptions<ApiResponseType<ProductResponse[]>, Error> & {
