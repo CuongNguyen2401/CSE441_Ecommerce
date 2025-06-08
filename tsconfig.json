@@ -8,7 +8,14 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@screens/*": ["screens/*"]
+      "@screens/*": ["screens/*"],
+      "@services/*": ["services/*"],
+      "@navigation/*": ["navigation/*"],
+      "@utils/*": ["utils/*"],
+      "@config/*": ["config/*"],
+      "@components/*": ["components/*"],
+      "@store/*": ["store/*"],
+      "@assets/*": ["../assets/*"]
     }
     // "noEmit": true,
     // "allowImportingTsExtensions": true

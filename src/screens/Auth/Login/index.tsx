@@ -130,10 +130,11 @@ const LoginScreen = () => {
                 </Text>
               </Button>
             </XStack>
-
+            
+            
             {isError ? (
-              <Text color="$red10" fontSize="$2" textAlign="center">
-                Please enter both email and password
+              <Text color="$red10" fontSize="$3" textAlign="center">
+                Your username or password is invalid. Please try again.
               </Text>
             ) : null}
 

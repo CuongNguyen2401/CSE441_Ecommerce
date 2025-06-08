@@ -58,6 +58,7 @@ export type RootStackParamList = {
   [NavigationRoutes.CREATE_PRODUCT]: undefined;
   [NavigationRoutes.EDIT_PRODUCT]: {productId: number};
   [NavigationRoutes.PRODUCT_DETAILS_ADMIN]: {productId: number};
+  
 };
 
 // Auth Stack

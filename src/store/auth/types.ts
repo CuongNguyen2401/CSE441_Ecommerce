@@ -7,7 +7,7 @@ export type User = {
   phoneNumber: string;
   gender: Gender;
   address: string;
-  dateOfBirth: string;
+  dateOfBirth?: string;
   status: UserStatus;
   avatar: string;
   roles?: Role[];

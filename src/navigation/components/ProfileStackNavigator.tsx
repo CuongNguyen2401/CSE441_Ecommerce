@@ -4,7 +4,7 @@ import {NavigationRoutes, ProfileStackParamList} from '../types';
 import ProfileScreen from '@screens/User/profile/ProfileScreen';
 
 const EditProfileScreen = lazy(
-  () => import('@screens/User/profile/EditProfileScreen'),
+  () => import('@screens/User/profile/EditProfile/EditProfileScreen'),
 );
 const AddressesScreen = lazy(
   () => import('@screens/User/profile/AddressesScreen'),
@@ -29,6 +29,7 @@ const ProfileStackNavigator = () => {
         name={NavigationRoutes.PROFILE}
         component={ProfileScreen}
         options={{title: 'My Profile'}}
+        
       />
       <ProfileStack.Screen
         name={NavigationRoutes.EDIT_PROFILE}

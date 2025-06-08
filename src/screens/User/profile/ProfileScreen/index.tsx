@@ -19,7 +19,7 @@ import {NO_DATA} from 'utils';
 
 const ProfileScreen = () => {
   const {
-    state: {user: userData, isAdmin},
+    state: {user: userData},
     handlers: {
       handleEditProfile,
       handleAddresses,
@@ -28,10 +28,9 @@ const ProfileScreen = () => {
       handleLogout,
       handleOrdersPress,
       handleCartPress,
-      handleAdminPress,
     },
   } = useProfileScreen();
-
+  const defaultUser = require('@assets/default.png');
   return (
     <ScrollView flex={1} backgroundColor="$background">
       <YStack padding="$4" gap="$4">
@@ -39,7 +38,7 @@ const ProfileScreen = () => {
         <Card bordered padding="$4">
           <YStack gap="$4" alignItems="center">
             <Avatar circular size="$10">
-              <Avatar.Image src={userData?.avatar} />
+              <Avatar.Image src={userData?.avatar ?? defaultUser} />
               <Avatar.Fallback backgroundColor="$blue10">
                 <Text color="white" fontSize="$6">
                   {userData?.firstName ?? NO_DATA}
@@ -67,6 +66,7 @@ const ProfileScreen = () => {
             </Button>
           </YStack>
         </Card>
+
         {/* Quick Actions */}
         <YStack gap="$3">
           <H4>Account</H4>
@@ -114,80 +114,21 @@ const ProfileScreen = () => {
             </YStack>
           </Card>
         </YStack>
-        {/* Default Address */}
-        {/* {userData?.addresses.length > 0 && (
-          <YStack gap="$3">
-            <XStack justifyContent="space-between" alignItems="center">
-              <H4>Default Address</H4>
-              <Button size="$2" onPress={handleAddresses}>
-                <Text fontSize="$2" color="$blue10">
-                  View All
-                </Text>
-              </Button>
-            </XStack>
 
-            <Card bordered padding="$3">
-              <YStack gap="$1">
-                <Text fontSize="$3" fontWeight="bold">
-                  {userData?.addresses[0].name}
-                </Text>
-                <Text fontSize="$2">{userData?.addresses[0].street}</Text>
-                <Text fontSize="$2">
-                  {`${userData?.addresses[0].city}, ${userData?.addresses[0].state} ${userData?.addresses[0].zip}`}
-                </Text>
-                <Text fontSize="$2">{userData?.addresses[0].country}</Text>
-                <Text fontSize="$2">{userData?.addresses[0].phone}</Text>
-              </YStack>
-            </Card>
-          </YStack>
-        )} */}
-        {/* Payment Methods */}
-        {/* {userData?.paymentMethods.length > 0 && (
-          <YStack gap="$3">
-            <H4>Payment Methods</H4>
-
-            <Card bordered padding="$3">
-              <XStack gap="$3" alignItems="center">
-                <Icon name="credit-card" size={24} color="#666" />
-                <YStack>
-                  <Text fontSize="$3" fontWeight="bold">
-                    {userData?.paymentMethods[0].type}
-                  </Text>
-                  <Text fontSize="$2" color="$gray10">
-                    •••• {userData?.paymentMethods[0].last4} | Expires{' '}
-                    {userData?.paymentMethods[0].expiry}
-                  </Text>
-                </YStack>
-              </XStack>
-            </Card>
-          </YStack>
-        )} */}
-        {/* Admin Access - Only show for admin users */}
-        {isAdmin && (
-          <YStack gap="$3">
-            <H4>Administration</H4>
-
-            <Card bordered>
-              <YStack>
-                <Button
-                  size="$4"
-                  justifyContent="flex-start"
-                  backgroundColor="transparent"
-                  onPress={handleAdminPress}>
-                  <XStack gap="$3" flex={1} alignItems="center">
-                    <Icon name="admin-panel-settings" size={24} color="#666" />
-                    <Text fontSize="$3">Product Management</Text>
-                    <View flex={1} />
-                    <Icon name="chevron-right" size={24} color="#666" />
-                  </XStack>
-                </Button>
-              </YStack>
-            </Card>
-          </YStack>
-        )}
         {/* Settings */}
         <YStack gap="$3">
-          <H4>Settings</H4>
+          <XStack alignItems="center" gap="$2">
+            <H4>Settings</H4>
+            <XStack
+              backgroundColor="$blue5"
+              paddingHorizontal="$1.5"
+              paddingVertical="$0.5"
+              borderRadius="$2">
+              <Text color="$blue10" fontSize="$2.5" fontWeight="bold">
+                Developing
+              </Text>
+            </XStack>
+          </XStack>
 
           <Card bordered>
             <YStack>
@@ -221,6 +162,7 @@ const ProfileScreen = () => {
             </YStack>
           </Card>
         </YStack>
+
         {/* Logout Button */}
         <Button
           size="$4"

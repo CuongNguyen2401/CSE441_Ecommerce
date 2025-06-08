@@ -98,7 +98,7 @@ const CreateProductScreen = () => {
   const onSubmit = (data: ProductFormData) => {
     const productData: ProductRequest = {
       name: data.name,
-      description: data.description || '',
+      description: data.description ?? '',
       price: data.price,
       salePrice: data.salePrice,
       quantity: data.quantity,
@@ -119,7 +119,7 @@ const CreateProductScreen = () => {
       onError: (err: any) => {
         Alert.alert(
           'Error',
-          err.response?.data?.message || 'Failed to create product',
+          err.response?.data?.message ?? 'Failed to create product',
         );
       },
     });

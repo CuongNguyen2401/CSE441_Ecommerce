@@ -3,6 +3,8 @@ import Constants from 'expo-constants';
 export enum API_KEYS {
   PROFILE_BY_ID = 'profile_by_id',
   USER_INFO = 'user_info',
+  UPDATE_PROFILE = 'update_profile',
+  SIGN_UP = 'sign_up',
 
   //PRODUCTS
   All_PRODUCTS = 'products',

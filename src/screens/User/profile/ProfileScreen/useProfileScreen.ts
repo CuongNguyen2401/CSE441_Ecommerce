@@ -36,6 +36,11 @@ export const useProfileScreen = () => {
 
   const handleLogout = () => {
     clearAuth();
+    rootNavigation.navigate(NavigationRoutes.AUTH, {
+      screen: NavigationRoutes.LOGIN,
+      params: {},
+    });
+
     // Navigation will be handled by the auth state change in AppNavigator
   };
 
