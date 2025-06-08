@@ -52,7 +52,7 @@ const ProductDetailsScreen = () => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            deleteProduct([productId.toString()], {
+            deleteProduct([productId?.toString()], {
               onSuccess: () => {
                 Alert.alert('Success', 'Product deleted successfully!', [
                   {

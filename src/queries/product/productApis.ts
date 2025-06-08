@@ -19,7 +19,7 @@ const apis = (baseUrl = APP_APIS.PRODUCT) => {
     // Destructuring to separate image from other product data
     const {image, ...productDataWithoutImage} = productData;
 
-    formData.append('product', stringify(productDataWithoutImage));
+    formData.append('product', JSON.stringify(productDataWithoutImage));
 
     if (image && image instanceof File) {
       formData.append('file', image);
@@ -38,13 +38,13 @@ const apis = (baseUrl = APP_APIS.PRODUCT) => {
     // Destructuring to separate image from other product data
     const {image, ...productDataWithoutImage} = productData;
 
-    formData.append('product', stringify(productDataWithoutImage));
+    formData.append('product', JSON.stringify(productDataWithoutImage));
 
     if (image && image instanceof File) {
       formData.append('file', image);
     }
 
-    return privateRequest.put('/', formData, {
+    return privateRequest.put('', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -77,7 +77,10 @@ const apis = (baseUrl = APP_APIS.PRODUCT) => {
   };
 
   const deleteProducts = (ids: string[]) => {
-    return privateRequest.delete('/', {data: ids});
+    return privateRequest.delete(
+      '',
+      ids.length > 0 ? {data: {ids}} : undefined,
+    );
   };
 
   const getMostSoldProducts = () => {

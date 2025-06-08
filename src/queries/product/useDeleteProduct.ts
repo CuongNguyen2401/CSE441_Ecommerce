@@ -1,12 +1,12 @@
 import {useMutation, useQueryClient} from 'react-query';
-import productApis from './productApis';
 import {PRODUCT_KEYS} from './keys';
+import {productApis} from '.';
 
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (productIds: string[]) => {
-      return productApis().deleteProducts(productIds);
+      return productApis.deleteProducts(productIds);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

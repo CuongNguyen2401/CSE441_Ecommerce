@@ -20,12 +20,13 @@ import {
 import {useForm, Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker'; // Make sure this is installed: expo install expo-image-picker
 
 import {useCreateProduct} from 'queries/product/useCreateProduct';
 import {useGetAllCategories} from 'queries/category/useGetAllCategories';
 import {productFormSchema, ProductFormData} from 'queries/product/validation';
 import {ProductRequest, ProductStatus} from 'queries/product/types';
+import {useNavigation} from '@react-navigation/native';
 
 const CreateProductScreen = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -33,7 +34,9 @@ const CreateProductScreen = () => {
 
   // Hooks
   const {createProduct, isCreating, error} = useCreateProduct();
-  const {categories} = useGetAllCategories(); // Form setup with React Hook Form and Zod
+  const {categories} = useGetAllCategories();
+
+  // Form setup with React Hook Form and Zod
   const {
     control,
     handleSubmit,
@@ -47,11 +50,13 @@ const CreateProductScreen = () => {
       price: 0,
       salePrice: undefined,
       quantity: 0,
-      categoryId: 1,
+      categoryId: 1, // Consider setting a default category ID or making it nullable/required based on your schema
       productStatus: 'ACTIVE',
       relatedProducts: [],
     },
   });
+
+  const navigate = useNavigation();
 
   // Image picker handler
   const handleImagePicker = async () => {
@@ -70,57 +75,77 @@ const CreateProductScreen = () => {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
+        aspect: [1, 1], // Ensure consistent aspect ratio
+        quality: 0.8, // Compress image quality
       });
 
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0];
         setSelectedImage(asset.uri);
 
-        // Convert to File object for web/form submission
-        if (asset.uri.startsWith('http')) {
+        // --- CORRECTED LOGIC FOR CREATING A FILE OBJECT ---
+        try {
           const response = await fetch(asset.uri);
           const blob = await response.blob();
-          const file = new File([blob], 'product-image.jpg', {
-            type: 'image/jpeg',
+
+          // Attempt to get filename and type from asset, otherwise use defaults
+          const filename = asset.fileName || `product-image-${Date.now()}.jpg`; // Unique filename
+          const fileType = asset.mimeType || blob.type || 'image/jpeg'; // Use mimeType from asset if available
+
+          const file = new File([blob], filename, {
+            type: fileType,
           });
           setImageFile(file);
+        } catch (fetchError) {
+          console.error(
+            'Error converting image URI to File object:',
+            fetchError,
+          );
+          Alert.alert('Error', 'Failed to prepare image for upload.');
+          setImageFile(null); // Ensure imageFile is null on error
         }
+        // --- END CORRECTED LOGIC ---
       }
     } catch (error) {
       console.error('Error picking image:', error);
-      Alert.alert('Error', 'Failed to select image');
+      Alert.alert('Error', 'Failed to select image from library.');
     }
   };
 
   // Form submission
   const onSubmit = (data: ProductFormData) => {
+    // Construct the productData for the API call
     const productData: ProductRequest = {
       name: data.name,
-      description: data.description ?? '',
+      description: data.description || '', // Ensure description is a string
       price: data.price,
       salePrice: data.salePrice,
       quantity: data.quantity,
       categoryId: data.categoryId,
-      productStatus: data.productStatus,
-      relatedProducts: data.relatedProducts || [],
-      image: imageFile || undefined,
+      productStatus: data.productStatus as ProductStatus, // Cast to ProductStatus
+      relatedProducts: data.relatedProducts || [], // Ensure relatedProducts is an array
+      image: imageFile || undefined, // Pass the File object, or undefined if no image
     };
 
+    // Call the mutation hook
     createProduct(productData, {
       onSuccess: () => {
         Alert.alert('Success', 'Product created successfully!');
-        // Reset form
+        // Reset form and image states
         reset();
         setSelectedImage(null);
         setImageFile(null);
+        navigate.goBack();
       },
       onError: (err: any) => {
-        Alert.alert(
-          'Error',
-          err.response?.data?.message ?? 'Failed to create product',
-        );
+        console.error('Submission error:', err);
+
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.message ||
+          'Failed to create product';
+
+        Alert.alert('Error', errorMessage);
       },
     });
   };
@@ -132,11 +157,11 @@ const CreateProductScreen = () => {
 
         <Card bordered padding="$4">
           <YStack gap="$4">
+            {/* Product Image Section */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
                 Product Image
               </Label>
-
               <XStack gap="$3" alignItems="center">
                 {selectedImage ? (
                   <Image
@@ -160,7 +185,6 @@ const CreateProductScreen = () => {
                     <Icon name="image" size={30} color="#999" />
                   </YStack>
                 )}
-
                 <Button
                   size="$3"
                   backgroundColor="$blue5"
@@ -171,6 +195,7 @@ const CreateProductScreen = () => {
                 </Button>
               </XStack>
             </YStack>
+
             {/* Product Name */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
@@ -194,6 +219,7 @@ const CreateProductScreen = () => {
                 </Text>
               )}
             </YStack>
+
             {/* Description */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
@@ -213,6 +239,7 @@ const CreateProductScreen = () => {
                 )}
               />
             </YStack>
+
             {/* Price and Sale Price */}
             <XStack gap="$3">
               <YStack gap="$2" flex={1}>
@@ -265,6 +292,7 @@ const CreateProductScreen = () => {
                 )}
               </YStack>
             </XStack>
+
             {/* Quantity */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
@@ -289,6 +317,7 @@ const CreateProductScreen = () => {
                 </Text>
               )}
             </YStack>
+
             {/* Category */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
@@ -321,6 +350,7 @@ const CreateProductScreen = () => {
                       <Select.ScrollUpButton />
                       <Select.Viewport>
                         <Select.Group>
+                          {/* Ensure categories are loaded and mapped correctly */}
                           {categories?.map(category => (
                             <Select.Item
                               key={category.id}
@@ -342,6 +372,7 @@ const CreateProductScreen = () => {
                 </Text>
               )}
             </YStack>
+
             {/* Product Status */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
@@ -388,6 +419,7 @@ const CreateProductScreen = () => {
                 )}
               />
             </YStack>
+
             {/* Submit Button */}
             <Button
               size="$4"
@@ -409,6 +441,7 @@ const CreateProductScreen = () => {
                 </XStack>
               )}
             </Button>
+
             {/* Error Display */}
             {error && (
               <Card backgroundColor="$red2" borderColor="$red8" padding="$3">

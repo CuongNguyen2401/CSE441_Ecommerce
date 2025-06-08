@@ -38,7 +38,7 @@ export interface ProductRequest {
   salePrice?: number;
   quantity: number;
   categoryId: number;
-  productStatus: ProductStatus;
+  productStatus?: ProductStatus;
   relatedProducts?: string[];
   image?: File;
 }
