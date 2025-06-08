@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Alert} from 'react-native';
 import {
   YStack,
@@ -185,12 +185,6 @@ const EditProductScreen = () => {
     <ScrollView flex={1} backgroundColor="$background">
       <YStack padding="$4" gap="$4">
         <XStack alignItems="center" gap="$3">
-          <Button
-            size="$3"
-            backgroundColor="transparent"
-            onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} />
-          </Button>
           <H3>Edit Product</H3>
         </XStack>
 

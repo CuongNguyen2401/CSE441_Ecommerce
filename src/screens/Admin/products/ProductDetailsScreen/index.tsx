@@ -126,12 +126,6 @@ const ProductDetailsScreen = () => {
         {/* Header */}
         <XStack alignItems="center" justifyContent="space-between">
           <XStack alignItems="center" gap="$3" flex={1}>
-            <Button
-              size="$3"
-              backgroundColor="transparent"
-              onPress={() => navigation.goBack()}>
-              <Icon name="arrow-back" size={24} />
-            </Button>
             <H3 flex={1} numberOfLines={1}>
               Product Details
             </H3>

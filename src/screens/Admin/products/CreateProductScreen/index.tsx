@@ -132,7 +132,6 @@ const CreateProductScreen = () => {
 
         <Card bordered padding="$4">
           <YStack gap="$4">
-            {/* Product Image */}
             <YStack gap="$2">
               <Label fontSize="$3" fontWeight="bold">
                 Product Image

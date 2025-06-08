@@ -1,13 +1,15 @@
-import {useMutation, useQueryClient} from 'react-query';
-import {ProductUpdateRequest} from './types';
-import productApis from './productApis';
+import {useMutation, UseMutationOptions, useQueryClient} from 'react-query';
+import {ProductRequest, ProductResponse, ProductUpdateRequest} from './types';
 import {PRODUCT_KEYS} from './keys';
+import {productApis} from '.';
 
-export const useUpdateProduct = () => {
+export const useUpdateProduct = (
+  options?: UseMutationOptions<ProductResponse, any, ProductRequest>,
+) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (productData: ProductUpdateRequest) => {
-      return productApis().updateProduct(productData);
+      return productApis.updateProduct(productData);
     },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({
