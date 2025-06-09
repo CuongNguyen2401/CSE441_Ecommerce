@@ -95,6 +95,9 @@ const CreateProductScreen = () => {
           const file = new File([blob], filename, {
             type: fileType,
           });
+
+          console.log('Image file created:', file);
+
           setImageFile(file);
         } catch (fetchError) {
           console.error(
@@ -116,15 +119,15 @@ const CreateProductScreen = () => {
   const onSubmit = (data: ProductFormData) => {
     // Construct the productData for the API call
     const productData: ProductRequest = {
-      name: data.name,
-      description: data.description || '', // Ensure description is a string
-      price: data.price,
-      salePrice: data.salePrice,
-      quantity: data.quantity,
-      categoryId: data.categoryId,
-      productStatus: data.productStatus as ProductStatus, // Cast to ProductStatus
-      relatedProducts: data.relatedProducts || [], // Ensure relatedProducts is an array
-      image: imageFile || undefined, // Pass the File object, or undefined if no image
+      name: data?.name,
+      description: data?.description || '', // Ensure description is a string
+      price: data?.price,
+      salePrice: data?.salePrice,
+      quantity: data?.quantity,
+      categoryId: data?.categoryId,
+      productStatus: data?.productStatus as ProductStatus, // Cast to ProductStatus
+      relatedProducts: data?.relatedProducts || [], // Ensure relatedProducts is an array
+      image: imageFile || null,
     };
 
     // Call the mutation hook

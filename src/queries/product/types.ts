@@ -40,5 +40,5 @@ export interface ProductRequest {
   categoryId: number;
   productStatus?: ProductStatus;
   relatedProducts?: string[];
-  image?: File;
+  image: File | null;
 }
