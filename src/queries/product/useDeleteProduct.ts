@@ -4,8 +4,10 @@ import {productApis} from '.';
 
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
+  
   const mutation = useMutation({
-    mutationFn: (productIds: string[]) => {
+    mutationFn: (productIds: number[]) => {
+      console.log("🚀 ~ useDeleteProduct ~ productIds:", productIds);
       return productApis.deleteProducts(productIds);
     },
     onSuccess: () => {

@@ -76,11 +76,11 @@ const apis = (baseUrl = APP_APIS.PRODUCT) => {
     });
   };
 
-  const deleteProducts = (ids: string[]) => {
-    return privateRequest.delete(
-      '',
-      ids.length > 0 ? {data: {ids}} : undefined,
-    );
+  const deleteProducts = (ids: number[]) => {
+    console.log('🚀 ~ deleteProducts ~ ids:', ids);
+    return privateRequest.delete('', {
+      params: {ids: ids.join(',')},
+    });
   };
 
   const getMostSoldProducts = () => {

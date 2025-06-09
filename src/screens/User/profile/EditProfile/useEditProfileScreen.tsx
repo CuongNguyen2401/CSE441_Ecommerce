@@ -1,22 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useNavigation} from '@react-navigation/native';
 import {useUpdateProfile} from '@services/Auth/useUpdateProfile';
 import {useAuthStore} from '@store/auth/useAuthStore';
-import {useNavigation} from '@react-navigation/native';
-import * as ImagePicker from 'react-native-image-picker';
+import {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import Toast from 'react-native-toast-message';
 import {Alert} from 'react-native';
-import {profileSchema} from './EditProfile.helpers';
+import * as ImagePicker from 'react-native-image-picker';
+import Toast from 'react-native-toast-message';
 import {z} from 'zod';
-import {formatDate} from '@utils/formatDateUtil';
+import {profileSchema} from './EditProfile.helpers';
+import {useGetUserInfo} from '@services/Auth/useGetUserInfo';
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export const useEditProfileScreen = () => {
   const {user, setUser, accessTokenState} = useAuthStore();
+  const {onGetUserInfo} = useGetUserInfo({
+    onSuccess: userData => {
+      setUser(userData);
+    },
+  });
   const navigation = useNavigation();
   const {updateProfile, isUpdating, error: updateError} = useUpdateProfile();
+  const {handleInvalidateUserInfo} = useGetUserInfo();
 
   const [avatarImage, setAvatarImage] = useState<{
     uri: string;
@@ -104,10 +110,8 @@ export const useEditProfileScreen = () => {
         avatarFile: avatarImage,
       },
       {
-        onSuccess: (response: any) => {
-          if (response && response.result) {
-            setUser(response.result);
-          }
+        onSuccess: () => {
+          onGetUserInfo();
 
           Toast.show({
             type: 'success',
@@ -128,7 +132,7 @@ export const useEditProfileScreen = () => {
         },
       },
     );
-    console.log('cURL:',accessTokenState);
+    console.log('cURL:', accessTokenState);
   });
 
   const handleCancel = () => {

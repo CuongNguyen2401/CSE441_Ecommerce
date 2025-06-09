@@ -1,26 +1,26 @@
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationRoutes } from 'navigation/types';
+import { useGetAllCategories } from 'queries/category/useGetAllCategories';
+import { ProductStatus } from 'queries/product/types';
+import { useGetAllProducts } from 'queries/product/useGetAllProducts';
+import React, { useState } from 'react';
+import { FlatList, SafeAreaView } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
-  YStack,
-  XStack,
-  Text,
+  Adapt,
   Button,
   Card,
   H3,
-  Input,
-  Spinner,
   Image,
+  Input,
+  ScrollView,
   Select,
-  Adapt,
   Sheet,
+  Spinner,
+  Text,
+  XStack,
+  YStack,
 } from 'tamagui';
-import {FlatList} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useGetAllProducts} from 'queries/product/useGetAllProducts';
-import {useGetAllCategories} from 'queries/category/useGetAllCategories';
-import {ProductResponse, ProductStatus} from 'queries/product/types';
-import {NavigationRoutes} from 'navigation/types';
-import {SafeAreaView} from 'react-native';
 
 const ProductManagementScreen = () => {
   const navigation = useNavigation();
@@ -88,7 +88,7 @@ const ProductManagementScreen = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <YStack flex={1} backgroundColor="$background">
-        <YStack padding="$4" gap="$4">
+        <YStack flex={1} padding="$4" gap="$4">
           {/* Header */}
           <XStack justifyContent="space-between" alignItems="center">
             <H3>Product Management</H3>
@@ -127,7 +127,7 @@ const ProductManagementScreen = () => {
               <XStack gap="$3">
                 {/* Category Filter */}
                 <YStack flex={1} gap="$1">
-                  <Text fontSize="$2" color="$gray10">
+                  <Text fontSize="$3" color="$gray10">
                     Category
                   </Text>
                   <Select
@@ -173,7 +173,7 @@ const ProductManagementScreen = () => {
 
                 {/* Status Filter */}
                 <YStack flex={1} gap="$1">
-                  <Text fontSize="$2" color="$gray10">
+                  <Text fontSize="$3" color="$gray10">
                     Status
                   </Text>
                   <Select
@@ -250,7 +250,7 @@ const ProductManagementScreen = () => {
 
           {/* Products List */}
           <FlatList
-            style={{gap: 4}}
+            style={{flex: 1, gap: 4}}
             data={filteredProducts}
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => (
@@ -262,7 +262,6 @@ const ProductManagementScreen = () => {
                     height={60}
                     borderRadius="$3"
                     objectFit="cover"
-                    //defaultSource={require('https://fastly.picsum.photos/id/430/200/300.jpg?hmac=souGSmvwQ6KlJgthGYBGSWB22Y7MpK5xlgLYwvtbXzg')} // Replace with actual placeholder
                   />
 
                   {/* Product Info */}

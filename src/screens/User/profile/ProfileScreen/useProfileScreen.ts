@@ -15,8 +15,8 @@ export const useProfileScreen = () => {
   const rootNavigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  // Check if user has admin role
-  const isAdmin = user?.roles?.includes(Role.ADMIN) || false;
+  const isAdmin = user?.roles?.includes(Role.ADMIN) ;
+  console.log("🚀 ~ useProfileScreen ~ user:", user);
 
   const handleEditProfile = () => {
     navigation.navigate(NavigationRoutes.EDIT_PROFILE);

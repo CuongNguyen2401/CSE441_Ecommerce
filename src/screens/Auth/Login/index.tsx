@@ -39,6 +39,7 @@ const LoginScreen = () => {
         text1: 'Login Successful',
         text2: 'Welcome to my app!',
       });
+      console.log("🚀 ~ LoginScreen ~ accessToken:", accessToken);
       AsyncStorage.setItem('accessToken', accessToken).catch(error => {
         console.error('Failed to save access token:', error);
       });

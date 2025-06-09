@@ -5,11 +5,11 @@ import { API_KEYS } from '../keys';
 
 
 export const useUpdateProfile = (
-  options?: UseMutationOptions<any, any, UpdateProfileRequest>,
+  options?: UseMutationOptions<void, any, UpdateProfileRequest>,
 ) => {
 
   const {mutate, isLoading, error, data} = useMutation<
-    any,
+    void,
     any,
     UpdateProfileRequest
   >({

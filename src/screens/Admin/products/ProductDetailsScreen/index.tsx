@@ -30,7 +30,6 @@ const ProductDetailsScreen = () => {
   const route = useRoute<ProductDetailsScreenRouteProp>();
   const {productId} = route.params;
 
-  const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
   // Hooks
   const {product, isPending: isLoading} = useGetProductById({productId});
   const {deleteProduct, isDeleting} = useDeleteProduct();
@@ -52,7 +51,7 @@ const ProductDetailsScreen = () => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            deleteProduct([productId?.toString()], {
+            deleteProduct([Number(productId)], {
               onSuccess: () => {
                 Alert.alert('Success', 'Product deleted successfully!', [
                   {
@@ -258,7 +257,7 @@ const ProductDetailsScreen = () => {
                   <Text fontSize="$4" fontWeight="bold">
                     Description
                   </Text>
-                  <Text color="$gray11" lineHeight="$1">
+                  <Text fontSize="$3" color="$gray11">
                     {product.description}
                   </Text>
                 </YStack>
@@ -277,19 +276,21 @@ const ProductDetailsScreen = () => {
             <YStack gap="$2">
               <XStack justifyContent="space-between">
                 <Text color="$gray10">Category:</Text>
-                <Text fontWeight="500">{product.category.name}</Text>
+                <Text fontSize="$4" fontWeight="500">
+                  {product.category.name}
+                </Text>
               </XStack>
 
               <XStack justifyContent="space-between">
                 <Text color="$gray10">Slug:</Text>
-                <Text fontWeight="500" fontSize="$2">
+                <Text fontSize="$3" fontWeight="500">
                   {product.slug}
                 </Text>
               </XStack>
 
               <XStack justifyContent="space-between">
                 <Text color="$gray10">Product ID:</Text>
-                <Text fontWeight="500" fontSize="$2">
+                <Text fontSize="$3" fontWeight="500">
                   #{product.id}
                 </Text>
               </XStack>
@@ -306,23 +307,17 @@ const ProductDetailsScreen = () => {
 
             <YStack gap="$2">
               <YStack gap="$1">
-                <Text color="$gray10" fontSize="$2">
+                <Text color="$gray10" fontSize="$3">
                   Created Date:
                 </Text>
                 <Text fontSize="$3">{formatDate(product?.createdDate)}</Text>
-                <Text color="$gray9" fontSize="$2">
-                  by {product.createdBy}
-                </Text>
               </YStack>
 
               <YStack gap="$1">
-                <Text color="$gray10" fontSize="$2">
+                <Text color="$gray10" fontSize="$3">
                   Last Modified:
                 </Text>
                 <Text fontSize="$3">{formatDate(product.modifiedDate)}</Text>
-                <Text color="$gray9" fontSize="$2">
-                  by {product.modifiedBy}
-                </Text>
               </YStack>
             </YStack>
           </YStack>

@@ -32,6 +32,7 @@ const ProfileScreen = () => {
     },
   } = useProfileScreen();
   const defaultUser = require('@assets/default.png');
+        console.log("🚀 ~ ProfileScreen ~ isAdmin:", isAdmin);
   return (
     <ScrollView flex={1} backgroundColor="$background">
       <YStack padding="$4" gap="$4">

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Controller} from 'react-hook-form';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Controller } from 'react-hook-form';
 import {
   Avatar,
   Button,
@@ -13,7 +12,7 @@ import {
   XStack,
   YStack,
 } from 'tamagui';
-import {useEditProfileScreen} from './useEditProfileScreen';
+import { useEditProfileScreen } from './useEditProfileScreen';
 
 const EditProfileScreen = () => {
   const defaultUser = require('@assets/default.png');
@@ -43,10 +42,10 @@ const EditProfileScreen = () => {
             </Avatar.Fallback>
           </Avatar>
 
-          <Button size="$2" onPress={handleChangeAvatar}>
+          {/* <Button size="$2" onPress={handleChangeAvatar}>
             <Icon name="photo-camera" size={16} />
             <Text marginLeft="$1">Change Photo</Text>
-          </Button>
+          </Button> */}
         </YStack>
 
         <Form onSubmit={handleSubmit}>
